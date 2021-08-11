@@ -12,6 +12,7 @@
     "svelte": "^3.38.3"
   },
   "dependencies": {
+    "date-fns": "^2.23.0",
     "prettier": "^2.3.2",
     "prettier-plugin-svelte": "^2.3.1"
   },
