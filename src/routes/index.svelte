@@ -22,8 +22,21 @@
 </script>
 
 <script>
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  import LocalStorage from '../modules/localStorage';
+  import WebSockets from '../modules/websockets';
   import BoxScore from '../components/BoxScore.svelte';
+  import LiveScoreboard from '../components/LiveScoreboard.svelte';
   export let recentMatches = [];
+  let deviceId = LocalStorage.get('device');
+  onMount(() => {
+    if (deviceId) {
+      WebSockets.init(deviceId, false);
+    } else {
+      goto('/set-device');
+    }
+  });
 </script>
 
 {#if recentMatches.length > 0}
@@ -31,21 +44,8 @@
 
   <ul>
     {#each recentMatches as match}
+      <LiveScoreboard {match} />
       <BoxScore {match} />
     {/each}
   </ul>
 {/if}
-<footer>
-  <p>
-    Created with <a
-      class="link"
-      target="_blank"
-      rel="noopener"
-      href="https://svelte.dev">SvelteKit</a
-    >
-    and deployed with
-    <a class="link" target="_blank" rel="noopener" href="https://vercel.com"
-      >▲ Vercel</a
-    >.
-  </p>
-</footer>

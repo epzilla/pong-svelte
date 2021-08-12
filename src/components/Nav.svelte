@@ -11,7 +11,7 @@
 
 <header class="header">
   <button class="btn menu-btn">Menu</button>
-  <a class="center" href="/" tabindex="0"><h1>Pong Tracker</h1></a>
+  <a href="/" tabindex="0"><h1>Pong Tracker</h1></a>
   <nav>
     {#each routes as { href, title }}
       <a {href} {title} class:active={view === href}>{title}</a>

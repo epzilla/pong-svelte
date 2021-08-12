@@ -58,7 +58,7 @@ export const getFormattedMatchDate = (game) => {
 };
 
 export const getMatchTimeAgo = (match) => {
-  return formatDistance(new Date(), parseISO(match.startTime), {
+  return formatDistance(parseISO(match.startTime), new Date(), {
     includeSeconds: true,
     addSuffix: true
   });
@@ -167,35 +167,71 @@ export const getFullPlayerName = (p) => {
   return name;
 };
 
-export const getBestGuessDevice = () => {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  const greaterDimension = height >= width ? height : width;
-  const lesserDimension = greaterDimension === height ? width : height;
-  const hiDpi =
-    window.matchMedia('(min-resolution: 120dpi)').matches ||
-    window.matchMedia('(-webkit-min-device-pixel-ratio: 1.3)').matches;
-
-  if (greaterDimension < 800) {
-    return DEVICE_TYPES.MOBILE_DEVICE;
-  } else if (greaterDimension < 1200 && lesserDimension < 800) {
-    return DEVICE_TYPES.TABLET_DEVICE;
-  } else if (
-    (greaterDimension < 1800 && lesserDimension >= 800) ||
-    (greaterDimension < 2400 && hiDpi)
-  ) {
-    return DEVICE_TYPES.LAPTOP_DEVICE;
-  } else if (greaterDimension > 1800) {
-    return DEVICE_TYPES.DESKTOP_DEVICE;
-  }
-
-  return DEVICE_TYPES.OTHER_DEVICE;
-};
-
 export const generateGuid = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     let r = (Math.random() * 16) | 0,
       v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
+};
+
+export const calculateExpectedPointsPerMatch = (match) => {
+  let expectedPerGame;
+
+  let finishedGames = match.games.filter((g) => g.gameFinished);
+  if (finishedGames.length > 0) {
+    expectedPerGame =
+      finishedGames.reduce(
+        (sum, current) => sum + (current.score1 + current.score2),
+        0
+      ) / finishedGames.length;
+  } else {
+    expectedPerGame = match.playTo * 1.75;
+  }
+
+  if (match.playAllGames) {
+    return expectedPerGame * match.bestOf;
+  }
+
+  return (
+    expectedPerGame *
+    Math.ceil((match.bestOf + Math.ceil(match.bestOf / 2)) / 2)
+  );
+};
+
+export const shouldFlashScore = (scoreFlash, game, i, teamNum) => {
+  if (scoreFlash.game === i) {
+    if (teamNum === 1 && game.player1Id === scoreFlash.scorer) {
+      return true;
+    } else if (teamNum === 2 && game.player2Id === scoreFlash.scorer) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+export const getBestGuessDevice = () => {
+  if (typeof window !== 'undefined') {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const greaterDimension = height >= width ? height : width;
+    const lesserDimension = greaterDimension === height ? width : height;
+    const hiDpi =
+      window.matchMedia('(min-resolution: 120dpi)').matches ||
+      window.matchMedia('(-webkit-min-device-pixel-ratio: 1.3)').matches;
+
+    if (greaterDimension < 800) {
+      return DEVICE_TYPES.MOBILE_DEVICE;
+    } else if (greaterDimension < 1200 && lesserDimension < 800) {
+      return DEVICE_TYPES.TABLET_DEVICE;
+    } else if (
+      (greaterDimension < 1800 && lesserDimension >= 800) ||
+      (greaterDimension < 2400 && hiDpi)
+    ) {
+      return DEVICE_TYPES.LAPTOP_DEVICE;
+    }
+  }
+
+  return DEVICE_TYPES.OTHER_DEVICE;
 };
