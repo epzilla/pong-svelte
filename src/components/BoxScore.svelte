@@ -625,4 +625,16 @@
   .scale-in-leave.big-box-score {
     animation: flip-out 300ms linear;
   }
+  .score-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .score-row .match-info-block {
+    margin: 0.5em;
+  }
+
+  .score-row .match-info-block .fa {
+    margin: 0 0.5em;
+  }
 </style>
