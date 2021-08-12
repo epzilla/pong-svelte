@@ -1,6 +1,6 @@
 <script>
   import FixedAlerts from '../components/FixedAlerts.svelte';
-  import Nav from '../components/nav.svelte';
+  import Nav from '../components/Nav.svelte';
 </script>
 
 <Nav />
