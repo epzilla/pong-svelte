@@ -1,8 +1,8 @@
-import parseISO from 'date-fns/parseISO';
-import isThisYear from 'date-fns/isThisYear';
-import differenceInDays from 'date-fns/differenceInDays';
-import formatDistance from 'date-fns/formatDistance';
-import format from 'date-fns/format';
+import parseISO from 'date-fns/parseISO/index.js';
+import isThisYear from 'date-fns/isThisYear/index.js';
+import differenceInDays from 'date-fns/differenceInDays/index.js';
+import formatDistance from 'date-fns/formatDistance/index.js';
+import format from 'date-fns/format/index.js';
 import { DEVICE_TYPES } from './constants';
 
 export const lightenOrDarken = (col, amt) => {
