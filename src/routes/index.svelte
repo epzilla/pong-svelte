@@ -44,7 +44,6 @@
 
   <ul>
     {#each recentMatches as match}
-      <LiveScoreboard {match} />
       <BoxScore {match} />
     {/each}
   </ul>

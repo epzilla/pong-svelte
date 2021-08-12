@@ -44,21 +44,11 @@
   <button class="close-button" on:click={() => dismiss(index)}>&times;</button>
 </div>
 
-<style>
-  .fixed-alerts .alert {
-    flex: 1 0 0%;
-  }
-  .alert-slide-in-enter.alert-slide-in-enter-active {
-    display: flex !important;
-  }
-  .alert-slide-in-leave.alert-slide-in-leave-active {
-    display: flex !important;
-  }
-  .alert-slide-in-enter {
-    animation: slide-in-overshoot 300ms ease;
-  }
-  .alert-slide-in-leave {
-    animation: ready-set-slide-out 300ms ease;
+<style lang="scss">
+  .fixed-alerts {
+    .alert {
+      flex: 1 0 0%;
+    }
   }
   .alert {
     display: flex;
@@ -67,36 +57,42 @@
     color: #003e7b;
     padding: 1rem;
     border-radius: 4px;
-  }
-  .alert:not(:last-of-type) {
-    margin-bottom: 0.25rem;
-  }
-  .alert.alert-error {
-    background-color: #c22f3d;
-    border-color: #a80817;
-    color: #fff;
-  }
-  .alert.alert-warning {
-    background-color: #ffeb85;
-    border-color: #e6cf5a;
-    color: #655606;
-  }
-  .alert.alert-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
-  }
-  .alert .close-button {
-    background: transparent;
-    border: none;
-    color: #003e7b;
-    cursor: pointer;
-    font-size: 1.5rem;
-    line-height: 0;
-    margin-left: auto;
-    padding-left: 1rem;
-  }
-  .alert .close-button:focus {
-    outline: none;
+
+    &:not(:last-of-type) {
+      margin-bottom: 0.25rem;
+    }
+
+    &.alert-error {
+      background-color: #c22f3d;
+      border-color: #a80817;
+      color: #fff;
+    }
+
+    &.alert-warning {
+      background-color: #ffeb85;
+      border-color: #e6cf5a;
+      color: #655606;
+    }
+
+    &.alert-success {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+    }
+
+    .close-button {
+      background: transparent;
+      border: none;
+      color: #003e7b;
+      cursor: pointer;
+      font-size: 1.5rem;
+      line-height: 0;
+      margin-left: auto;
+      padding-left: 1rem;
+
+      &:focus {
+        outline: none;
+      }
+    }
   }
 </style>
