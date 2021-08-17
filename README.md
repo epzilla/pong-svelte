@@ -1,6 +1,6 @@
 # SvelteKit
 
-Example project using SvelteKit with the [SpaceX GraphQL API](https://api.spacex.land/graphql/), deployed to [Vercel](https://vercel.com).
+Ping pong stat tracker using SvelteKit, deployed to [Vercel](https://vercel.com).
 
 ## Deploy Your Own
 
