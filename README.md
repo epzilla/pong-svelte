@@ -1,4 +1,4 @@
-# SvelteKit
+# pong-svelte
 
 Ping pong stat tracker using SvelteKit, deployed to [Vercel](https://vercel.com).
 
