@@ -51,7 +51,7 @@ export const getFormattedMatchDate = (game) => {
   }
 
   if (isThisYear(date)) {
-    return format(date, 'M/D');
+    return format(date, 'M/d');
   }
 
   return format(date, 'M/D/YY');
@@ -65,6 +65,7 @@ export const getMatchTimeAgo = (match) => {
 };
 
 export const getTeamName = (match, teamNum) => {
+  console.log({ match, teamNum });
   if (match.doubles && teamNum === 1) {
     return `${match.player1.lname} / ${match.partner1.lname}`;
   } else if (match.doubles && teamNum === 2) {
@@ -234,4 +235,8 @@ export const getBestGuessDevice = () => {
   }
 
   return DEVICE_TYPES.OTHER_DEVICE;
+};
+
+export const isEmpty = (obj) => {
+  return !obj || (typeof obj === 'object' && Object.keys(obj).length === 0);
 };

@@ -150,7 +150,7 @@
     {/each}
   </div>
   <div class="score-row stats-row flex-center">
-    {#if jumbotron && match?.finished}
+    {#if match?.finished}
       <div class="flex-col flex-center">
         <p class="final flex-center">Final</p>
         <p class="font-small center">{stats?.resultString}</p>
@@ -188,6 +188,8 @@
 
 <style lang="scss">
   .scoreboard {
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
     padding: 1rem;
     background-color: white;
@@ -330,13 +332,17 @@
 
   .score-row {
     display: flex;
-    flex-direction: column;
     align-items: flex-start;
     .match-info-block {
       margin: 0.5em;
     }
     .match-info-block .fa {
       margin: 0 0.5em;
+    }
+
+    &.stats-row {
+      flex-direction: column;
+      align-items: center;
     }
   }
 

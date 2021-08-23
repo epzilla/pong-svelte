@@ -60,6 +60,7 @@ const WebSockets = {
   },
 
   subscribe: (type, cb) => {
+    console.info(`Subscribing to: ${type}`);
     if (callbacks[type]) {
       callbacks[type].push(cb);
     } else {
@@ -69,6 +70,7 @@ const WebSockets = {
 
   unsubscribe: (type, cb) => {
     if (callbacks[type]) {
+      console.info(`Unsubscribing to: ${type}`);
       let i = callbacks[type].findIndex((fn) => fn === cb);
       if (i !== -1) {
         callbacks[type].splice(i, 1);
