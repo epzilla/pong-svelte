@@ -1,9 +1,10 @@
 <script>
   import Avatar from './Avatar.svelte';
-  export let player;
+  export let item;
+  export let highlighted;
 </script>
 
 <div class="flex-center">
-  <Avatar fname={player.fname} lname={player.lname} />
-  <span>{player.fname} {player.lname}</span>
+  <Avatar fname={item?.fname} lname={item?.lname} />
+  <span>{item?.fname} {item?.lname}</span>
 </div>

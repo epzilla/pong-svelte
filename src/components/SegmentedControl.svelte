@@ -1,42 +1,6 @@
-<!-- 
-    import { Component } from 'preact';
-
-export default class SegmentedControl extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: null };
-  }
-
-  componentWillReceiveProps({ value }) {
-    this.setState({ value });
-  }
-
-  
-
-  render() {
-    let opts = this.props.options.map(opt => {
-      let classes = 'btn';
-
-      if (opt.value === this.state.value) {
-        classes += ' selected';
-      }
-
-      return (
-        <button class={classes} onClick={(e) => this.onClick(opt.value)}>{opt.label}</button>
-      );
-    });
-
-    return (
-      <div class="segmented-control" onKeyup={this.onKeyup}>
-        { opts }
-      </div>
-    );
-  }
-}
- -->
 <script>
   export let options;
-  export let onClick;
+  export let onChange;
   export let value;
 
   function onKeyup(e) {
@@ -46,13 +10,13 @@ export default class SegmentedControl extends Component {
     ) {
       e.preventDefault();
       e.stopPropagation();
-      onClick(e.target.dataset('value'));
+      onChange(e.target.dataset('value'));
     }
   }
 
   function handleClick(v) {
-    value = v;
-    onChange && onChange(value);
+    // value = v;
+    onChange(v);
   }
 </script>
 
@@ -61,6 +25,7 @@ export default class SegmentedControl extends Component {
     <button
       class:selected={opt.value === value}
       class="btn"
+      data-value={opt.value}
       on:click={(e) => handleClick(opt.value)}>{opt.label}</button
     >
   {/each}

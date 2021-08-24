@@ -29,25 +29,28 @@
   import SegmentedControl from '../components/SegmentedControl.svelte';
   import Toggle from '../components/Toggle.svelte';
   import PlayerSelectBlock from '../components/PlayerSelectBlock.svelte';
+  import SelectPlayerModal from '../components/SelectPlayerModal.svelte';
 
-  export let doubles = false;
-  export let player1 = null;
-  export let player2 = null;
-  export let partner1 = null;
-  export let partner2 = null;
-  export let isSelectingPlayer = 0;
-  export let players = [];
-  export let playTo = 21;
-  export let selectedPlayToOption = -1;
-  export let winByTwo = true;
-  export let bestOf = 3;
-  export let updateEveryPoint = 1;
-  export let playAllGames = 0;
-  export let showPlayToInput = false;
-  export let flipping = false;
-  export let showCoinToss = false;
-  export let showCoinReverse = false;
-  export let firstServe = null;
+  export let players;
+  let doubles = false;
+  let player1 = null;
+  let player2 = null;
+  let partner1 = null;
+  let partner2 = null;
+  let isSelectingPlayer = 0;
+  let playTo = 21;
+  let selectedPlayToOption = 21;
+  let winByTwo = true;
+  let bestOf = 3;
+  let updateEveryPoint = 1;
+  let playAllGames = 0;
+  let showPlayToInput = false;
+  let flipping = false;
+  let showCoinToss = false;
+  let showCoinReverse = false;
+  let firstServe = null;
+  let flippingToP2 = false;
+  let p2winsToss = false;
 
   let deviceId = LocalStorage.get('device');
   let toggledOn = false;
@@ -75,10 +78,40 @@
         break;
       case 3:
         partner1 = p;
+        break;
       default:
         partner2 = p;
+        break;
     }
+    isSelectingPlayer = -1;
     setAndCacheState();
+  }
+
+  function onBestOfChange({ amount }) {
+    setState({ bestOf: amount });
+  }
+
+  function onPlayToOptionChange(p) {
+    if (p === 11 || p === 21) {
+      selectedPlayToOption = p;
+      playTo = p;
+      showPlayToInput = false;
+    } else {
+      selectedPlayToOption = -1;
+      showPlayToInput = true;
+    }
+  }
+
+  function onPlayToInputChange(e) {
+    setState({ playTo: parseInt(e.target.value) });
+  }
+
+  function onScoringTypeChange(u) {
+    updateEveryPoint = u;
+  }
+
+  function onPlayAllChange(p) {
+    playAllGames = p;
   }
 
   function dismissModal() {
@@ -124,14 +157,54 @@
     goto(`/add-new-player/new-match/${num}`);
   }
 
+  function onCoinFlipAnimationEnd(e) {
+    if (e.animationName.indexOf('coin-flip') !== -1) {
+      document.removeEventListener('animationend', onCoinFlipAnimationEnd);
+      if (p2winsToss) {
+        firstServe = player2;
+        flipping = false;
+        flippingToP2 = false;
+        showCoinReverse = true;
+      } else {
+        firstServe = player1;
+        flipping = false;
+        flippingToP2 = false;
+        showCoinReverse = false;
+      }
+    }
+  }
+
+  function flipCoin() {
+    firstServe = null;
+    showCoinToss = true;
+    showCoinReverse = false;
+
+    p2winsToss = Math.floor(Math.random() * 101) >= 50 ? true : false;
+    setTimeout(() => {
+      flipping = !p2winsToss;
+      flippingToP2 = p2winsToss;
+      setTimeout(() => {
+        document.addEventListener(
+          'animationend',
+
+          onCoinFlipAnimationEnd
+        );
+      }, 200);
+    }, 500);
+  }
+
+  function closeCoinFlip() {
+    showCoinToss = false;
+  }
+
   onMount(() => {
     WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
     let cachedState = LocalStorage.get('start-match-state');
-    player1 = cachedState?.player1 || players[0];
-    player2 = cachedState?.player2 || players[1];
+    player1 = cachedState?.player1;
+    player2 = cachedState?.player2;
     if (cachedState?.doubles) {
-      partner1 = cachedState?.partner1 || players[2];
-      partner2 = cachedState?.partner2 || players[3];
+      partner1 = cachedState?.partner1;
+      partner2 = cachedState?.partner2;
     }
   });
 
@@ -141,6 +214,180 @@
 </script>
 
 <h2>Start a New Match</h2>
+<div class="doubles-switch">
+  <SegmentedControl
+    options={[
+      { label: 'Singles', value: false },
+      { label: 'Doubles', value: true }
+    ]}
+    value={doubles}
+    onChange={() => (doubles = !doubles)}
+  />
+</div>
+<hr />
+<div class="player-selection-area">
+  <div class="team-select-block">
+    <PlayerSelectBlock
+      {doubles}
+      isPartner={false}
+      player={player1}
+      num={1}
+      selectCallback={() => (isSelectingPlayer = 1)}
+      selectBtnText="Change"
+    />
+    {#if doubles}
+      <PlayerSelectBlock
+        doubles={true}
+        isPartner={true}
+        player={partner1}
+        num={3}
+        selectCallback={() => (isSelectingPlayer = 3)}
+        selectBtnText="Change"
+      />
+    {/if}
+  </div>
+  <div class="player-selected-block flex-center">
+    <div class="versus-separator">vs.</div>
+  </div>
+  <div class="team-select-block">
+    <PlayerSelectBlock
+      {doubles}
+      isPartner={false}
+      player={player2}
+      num={2}
+      selectCallback={() => (isSelectingPlayer = 2)}
+      selectBtnText="Change"
+    />
+    {#if doubles}
+      <PlayerSelectBlock
+        doubles={true}
+        isPartner={true}
+        player={partner2}
+        num={4}
+        selectCallback={() => (isSelectingPlayer = 4)}
+        selectBtnText="Change"
+      />
+    {/if}
+  </div>
+</div>
+<hr />
+<div class="match-settings flex-col">
+  <div class="flex-col margin-bottom-1rem">
+    <div class="stepper-wrap flex-center">
+      <label class="label">Best of</label>
+      <Stepper
+        full
+        onChange={onBestOfChange}
+        initialValue={bestOf}
+        min={1}
+        max={7}
+      />
+      <label class="label">Games</label>
+    </div>
+    <hr />
+    <div class="flex-center flex-col controls-col">
+      <label class="label">Play to</label>
+      <SegmentedControl
+        options={[
+          { label: '11', value: 11 },
+          { label: '21', value: 21 },
+          { label: 'Other', value: -1 }
+        ]}
+        value={selectedPlayToOption}
+        onChange={onPlayToOptionChange}
+      />
+      {#if showPlayToInput}
+        <input
+          type="number"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          name="play-to-input"
+          id="play-to-input"
+          value={playTo}
+          onChange={onPlayToInputChange}
+        />
+      {/if}
+    </div>
+    <hr />
+    <div class="flex-center flex-col controls-col">
+      <label class="label">Play all games, even if match clinched?</label>
+      <SegmentedControl
+        options={[
+          { label: 'Yes', value: 1 },
+          { label: 'No', value: 0 }
+        ]}
+        value={playAllGames}
+        onChange={onPlayAllChange}
+      />
+    </div>
+    <hr />
+    <div class="flex-center flex-col controls-col">
+      <label class="label">Update scores</label>
+      <SegmentedControl
+        options={[
+          { label: 'After each game', value: 0 },
+          { label: 'Point-by-point', value: 1 }
+        ]}
+        value={updateEveryPoint}
+        onChange={onScoringTypeChange}
+      />
+    </div>
+  </div>
+  <hr />
+</div>
+{#if player1 && player2}
+  <div class="coin-flip-area">
+    <div
+      class={`flip-container ${flipping ? 'flipping' : ''} ${
+        flippingToP2 ? 'flipping-extra' : ''
+      } ${showCoinReverse ? 'reversed' : ''}`}
+    >
+      <div class="flipper">
+        <div class="front">
+          <Avatar coin big fname={player1.fname} lname={player1.lname} />
+        </div>
+        <div class="back">
+          <Avatar coin big fname={player2.fname} lname={player2.lname} />
+        </div>
+      </div>
+    </div>
+  </div>
+{/if}
+{#if !firstServe && !showCoinToss}
+  <div class="match-settings">
+    <button class="btn secondary big" on:click={() => flipCoin()}
+      >Flip Coin for 1st Serve</button
+    >
+  </div>
+{/if}
+{#if firstServe || showCoinToss}
+  <div class="match-settings first-serve">
+    <div class="flex-center flex-col controls-col">
+      {#if firstServe}
+        <label class="label">{firstServe.fname} serves first!</label>
+      {:else}
+        <label class="label">Here goes...</label>
+      {/if}
+    </div>
+  </div>
+{/if}
+<hr />
+<div class="start-btn-wrap margin-bottom-1rem">
+  <button class="btn success big begin-match-btn" on:click={() => beginMatch()}
+    >Begin</button
+  >
+</div>
+
+{#if isSelectingPlayer > 0}
+  <SelectPlayerModal
+    {isSelectingPlayer}
+    dismiss={() => (isSelectingPlayer = -1)}
+    {player1}
+    {player2}
+    {players}
+    select={selectPlayer}
+  />
+{/if}
 
 <!-- {JSON.stringify({ player1, player2, partner1, partner2 })} -->
 <style lang="scss">

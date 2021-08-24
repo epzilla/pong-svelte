@@ -1,13 +1,13 @@
 <script>
   import { onMount } from 'svelte';
   import StepperBtn from './StepperBtn.svelte';
-  export let initialValue;
-  export let full;
-  export let padSingleDigits;
-  export let onChange;
-  export let min;
-  export let max;
-  export let wrap;
+  export let initialValue = 0;
+  export let full = true;
+  export let padSingleDigits = false;
+  export let onChange = null;
+  export let min = null;
+  export let max = null;
+  export let wrap = false;
 
   let val = initialValue || 0;
   let classes = `stepper stepper-full`;

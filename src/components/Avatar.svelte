@@ -1,15 +1,15 @@
 <script>
   import Rest from '../modules/rest';
 
-  export let avatar;
-  export let avatarUpdatedCallback;
-  export let big;
-  export let coin;
-  export let editable;
-  export let fname;
-  export let newAvatar;
-  export let lname;
-  export let empty;
+  export let avatar = '';
+  export let avatarUpdatedCallback = null;
+  export let big = false;
+  export let coin = false;
+  export let editable = false;
+  export let fname = '';
+  export let newAvatar = '';
+  export let lname = '';
+  export let empty = false;
 
   function edit(e) {
     let input = e.currentTarget.querySelector('input');
@@ -141,7 +141,9 @@
     &.big {
       height: 6rem;
       width: 6rem;
-      margin: 0 2rem;
+      &:not(.coin) {
+        margin: 0 2rem;
+      }
     }
 
     &.editable {

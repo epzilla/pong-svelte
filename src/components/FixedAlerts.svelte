@@ -1,7 +1,7 @@
 <script>
   import { alerts } from '../modules/stores/alert-store';
   import Alert from './Alert.svelte';
-  export let device;
+  export let device = '';
 
   function dismiss(i) {
     $alerts = $alerts.filter((a, j) => i !== j);
