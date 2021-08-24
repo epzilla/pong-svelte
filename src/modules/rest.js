@@ -28,8 +28,8 @@ const put = async (url, data) => {
     },
     body: JSON.stringify(body)
   });
-  const data = await res.json();
-  return data;
+  const json = await res.json();
+  return json;
 };
 
 export default { post, put };
