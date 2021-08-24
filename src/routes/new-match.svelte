@@ -389,7 +389,6 @@
   />
 {/if}
 
-<!-- {JSON.stringify({ player1, player2, partner1, partner2 })} -->
 <style lang="scss">
   .main.new-match {
     display: flex;

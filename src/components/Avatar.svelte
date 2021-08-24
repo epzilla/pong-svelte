@@ -78,7 +78,8 @@
 
 {#if editable}
   <div
-    class={classes}
+    class="avatar editable"
+    class:big
     on:click={edit}
     on:dragenter={handleDragenter}
     on:dragover={handleDragover}
@@ -95,27 +96,26 @@
       <span>Click to change</span>
     </div>
   </div>
-{:else if fname || lname}
-  <div class={classes}>
-    <span class="avatar-initials"
-      >{fname ? fname[0] : ''}{lname ? lname[0] : ''}</span
-    >
-  </div>
-{:else if empty}
-  <div class={classes}>
-    <span class="avatar-empty">
-      <i class="fa fa-user-circle" />
-    </span>
-  </div>
 {:else}
   <div
-    class={classes}
+    class="avatar"
+    class:big
+    class:coin
+    class:empty
     style={{
-      backgroundImage: avatar
-        ? `url(${avatar})`
-        : `url(/assets/images/default_avatar.png)`
+      backgroundImage: avatar ? `url(${avatar})` : ''
     }}
-  />
+  >
+    {#if fname || lname}
+      <span class="avatar-initials"
+        >{fname ? fname[0] : ''}{lname ? lname[0] : ''}</span
+      >
+    {:else if empty}
+      <span class="avatar-empty">
+        <i class="fa fa-user-circle" />
+      </span>
+    {/if}
+  </div>
 {/if}
 
 <style lang="scss">
