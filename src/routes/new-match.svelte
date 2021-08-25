@@ -27,7 +27,6 @@
   import Avatar from '../components/Avatar.svelte';
   import Stepper from '../components/Stepper.svelte';
   import SegmentedControl from '../components/SegmentedControl.svelte';
-  import Toggle from '../components/Toggle.svelte';
   import PlayerSelectBlock from '../components/PlayerSelectBlock.svelte';
   import SelectPlayerModal from '../components/SelectPlayerModal.svelte';
 
