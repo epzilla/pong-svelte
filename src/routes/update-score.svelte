@@ -1,17 +1,17 @@
 <script context="module">
   export async function load({ fetch }) {
     try {
-      const [currentMatchResult, devicesResult] = await Promise.all([
+      const [matchResult, devicesResult] = await Promise.all([
         fetch('https://pong-api.herokuapp.com/matches/current'),
         fetch('https://pong-api.herokuapp.com/devices')
       ]);
 
-      const currentMatch = await currentMatchResult.json();
+      const match = await matchResult.json();
       const devices = await devicesResult.json();
       const deviceId = LocalStorage.get('device');
       return {
         props: {
-          currentMatch,
+          match,
           devices,
           deviceId
         }
@@ -41,7 +41,7 @@
 
   export let deviceId;
   export let devices;
-  export let currentMatch;
+  export let match;
   let gamesCollapsed = {};
 
   selectDevices = (devices) => {
@@ -72,23 +72,77 @@
     }
   };
 
-  function onScoreUpdateFromElsewhere() {}
+  function onScoreUpdateFromElsewhere() {
+    let i = match.games.findIndex((g) => g.id === game.id);
+    if (i !== -1) {
+      match.games[i] = game;
+      match = match;
+    }
+  }
 
-  function onGameStartedElsewhere() {}
+  function onGameStartedElsewhere(game) {
+    let i = match.games.findIndex((g) => g.id === game.id);
+    if (i === -1) {
+      match.games.push(game);
+    } else {
+      match.games[i] = game;
+    }
 
-  function onMatchFinishedFromElsewhere() {}
+    match = match;
+    if (game.gameFinished) {
+      gamesCollapsed[game.id] = true;
+      gamesCollapsed = gamesCollapsed;
+    }
+  }
 
-  function onGameFinishedFromElsewhere() {}
+  function onMatchFinishedFromElsewhere(m) {
+    if (m.id === match.id) {
+      goto('/');
+    }
+  }
 
-  onMount(() => {
-    if (currentMatch && deviceId && devices) {
+  function onGameFinishedFromElsewhere({ game }) {
+    onGameStartedElsewhere(game);
+  }
+
+  async function scoreChange(game, playerNum, { amount }) {
+    let { games } = match;
+    let i = games.findIndex((g) => g.id === game.id);
+    if (i !== -1) {
+      let checkForFinishedMatch = false;
+      games[i][`score${playerNum}`] = amount;
+      if (
+        amount >= match.playTo &&
+        (!match.winByTwo || Math.abs(games[i].score1 - games[i].score2) > 1)
+      ) {
+        games[i].gameFinished = 1;
+        gamesCollapsed[games[i].id] = true;
+        checkForFinishedMatch = true;
+        gamesCollapsed = gamesCollapsed;
+      }
+      await Rest.post('games/update', {
+        game: games[i],
+        scorer: playerNum,
+        deviceId
+      });
+      match = { ...match, games };
+      if (checkForFinishedMatch) {
+        checkIfMatchFinished();
+      }
+    }
+  }
+
+  onMount(async () => {
+    if (match && deviceId && devices) {
       WebSockets.subscribe(SCORE_UPDATE, onScoreUpdateFromElsewhere);
       WebSockets.subscribe(GAME_STARTED, onGameStartedElsewhere);
       WebSockets.subscribe(MATCH_FINISHED, onMatchFinishedFromElsewhere);
       WebSockets.subscribe(GAME_FINISHED, onGameFinishedFromElsewhere);
-      const canUpdateScore = await Rest.get(`matches/can-update-score/${deviceId}`);
+      const canUpdateScore = await Rest.get(
+        `matches/can-update-score/${deviceId}`
+      );
       if (canUpdateScore) {
-        currentMatch.games.forEach(g => gamesCollapsed[g.id] = !!g.gameFinished);
+        match.games.forEach((g) => (gamesCollapsed[g.id] = !!g.gameFinished));
       } else {
         console.warn(DEVICE_CANNOT_UPDATE_MATCH);
         goto('/');
