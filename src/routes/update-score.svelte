@@ -43,7 +43,7 @@
   import Expandable from '../components/Expandable.svelte';
   import Stepper from '../components/Stepper.svelte';
   import Toggle from '../components/Toggle.svelte';
-  import { getTeamName } from '../modules/helpers';
+  import { getScoreHeaderLine, getTeamName } from '../modules/helpers';
 
   const device = LocalStorage.get('device');
   const deviceId = device?.id || null;
@@ -143,6 +143,18 @@
     }
   }
 
+  function addGame() {
+    Rest.post('games/add', { match, deviceId }).then((g) => {
+      match.games.push(g);
+      Object.keys(gamesCollapsed).forEach((gc) => {
+        gamesCollapsed[gc] = true;
+      });
+      gamesCollapsed[g.id] = false;
+      match = match;
+      gamesCollapsed = gamesCollapsed;
+    });
+  }
+
   async function scoreChange(game, playerNum, { amount }) {
     let { games } = match;
     let i = games.findIndex((g) => g.id === game.id);
@@ -150,6 +162,7 @@
       let checkForFinishedMatch = false;
       games[i][`score${playerNum}`] = amount;
       if (
+        match.updateEveryPoint &&
         amount >= match.playTo &&
         (!match.winByTwo || Math.abs(games[i].score1 - games[i].score2) > 1)
       ) {
@@ -178,7 +191,22 @@
     showChooseOtherDevice = false;
   }
 
-  function endMatch() {}
+  function endMatch() {
+    if (match && deviceId) {
+      match.finished = 1;
+      Rest.post('matches/finish', { match, deviceId }).then(() => {
+        let matchIds = LocalStorage.get('match-ids');
+        if (matchIds) {
+          let i = matchIds.indexOf(match.id);
+          if (i !== -1) {
+            matchIds.splice(i, 1);
+            LocalStorage.set('match-ids', matchIds);
+          }
+        }
+        goto(`/match-summary/${match.id}`);
+      });
+    }
+  }
 
   function getTitle(g, i) {
     let title = `Game ${i + 1}`;
@@ -251,7 +279,7 @@
       <li>
         <Expandable
           title={getTitle(game, i)}
-          collapsed={gamesCollapsed[game.id]}
+          forceCollapsed={gamesCollapsed[game.id]}
           id={game.id}
           toggle={(id) => toggleExpanded(id)}
         >
@@ -319,7 +347,12 @@
     confirm={endMatch}
     dismiss={dismissEndMatchModal}
   />
-  <!-- <SelectDeviceModal select={selectDevices} dismiss={dismissDeviceModal} /> -->
+  <SelectDeviceModal
+    show={showChooseOtherDevice}
+    onSelect={selectDevices}
+    {devices}
+    dismiss={dismissDeviceModal}
+  />
 </div>
 
 <style lang="scss">

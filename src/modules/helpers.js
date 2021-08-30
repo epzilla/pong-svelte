@@ -65,7 +65,6 @@ export const getMatchTimeAgo = (match) => {
 };
 
 export const getTeamName = (match, teamNum) => {
-  console.log({ match, teamNum });
   if (match.doubles && teamNum === 1) {
     return `${match.player1.lname} / ${match.partner1.lname}`;
   } else if (match.doubles && teamNum === 2) {
@@ -164,7 +163,6 @@ export const getFullPlayerName = (p) => {
     }
   }
 
-  console.log(name);
   return name;
 };
 

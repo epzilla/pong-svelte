@@ -2,16 +2,19 @@
   import DeviceListItem from './DeviceListItem.svelte';
   import Modal from './Modal.svelte';
   import SelectList from './SelectList.svelte';
+  import { addAlert } from '../modules/stores/alert-store';
+  import { NO_DEVICES_SELECTED_ERROR } from '../modules/constants';
   export let devices = [];
   export let onSelect;
-  export let postAlert;
+  export let dismiss;
+  export let show;
   let selectedDevices = [];
 
   function toggleItemSelected(d) {
     let allSelected = [...selectedDevices];
     const i = allSelected.indexOf(d);
     if (i === -1) {
-      allSelected.push(device);
+      allSelected.push(d);
     } else {
       allSelected.splice(i, 1);
     }
@@ -21,14 +24,14 @@
 
   function submit() {
     if (selectedDevices && selectedDevices.length > 0) {
-      select(selectedDevices);
-    } else if (postAlert) {
-      postAlert({ type: 'error', msg: NO_DEVICES_SELECTED_ERROR });
+      onSelect(selectedDevices);
+    } else {
+      addAlert({ type: 'error', msg: NO_DEVICES_SELECTED_ERROR });
     }
   }
 </script>
 
-<Modal>
+<Modal {dismiss} {show}>
   <svelte:fragment slot="header">
     <h2>Select Devices</h2>
     <p>

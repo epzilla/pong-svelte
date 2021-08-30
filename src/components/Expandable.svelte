@@ -1,11 +1,15 @@
 <script>
   export let defaultCollapsed = true;
+  export let forceCollapsed = false;
   export let centered = false;
   export let small = false;
   export let id = '';
   export let title = '';
   export let toggle;
-  let collapsed = !!defaultCollapsed;
+  let collapsed =
+    forceCollapsed === true || forceCollapsed === false
+      ? forceCollapsed
+      : !!defaultCollapsed;
 </script>
 
 <div class="expandable" class:collapsed class:small class:centered>
@@ -14,7 +18,9 @@
   </div>
   <input
     class="hidden-checkbox"
-    checked={!collapsed}
+    checked={forceCollapsed === true || forceCollapsed === false
+      ? !forceCollapsed
+      : !collapsed}
     type="checkbox"
     id={`expandable-${title}`}
     on:change={() => {

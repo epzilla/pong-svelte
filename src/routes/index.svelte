@@ -59,7 +59,7 @@
   <LiveScoreboard match={currentMatch} />
 {/if}
 
-{#if currentMatch}
+{#if !isEmpty(currentMatch)}
   {#if canUpdateScore}
     <a href="/update-score" class="btn big success update-score">Update Score</a
     >

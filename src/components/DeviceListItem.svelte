@@ -1,11 +1,11 @@
 <script>
   import DeviceIcon from './DeviceIcon.svelte';
-  export let device;
+  export let item;
 </script>
 
 <div class="flex-center">
-  {#if device}
-    <DeviceIcon type={device.type} />
-    <span>{device.name}</span>
+  {#if item}
+    <DeviceIcon type={item.type} />
+    <span>{item.name}</span>
   {/if}
 </div>
