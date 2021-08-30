@@ -17,7 +17,12 @@
     checked={!collapsed}
     type="checkbox"
     id={`expandable-${title}`}
-    on:change={() => (collapsed = !collapsed)}
+    on:change={() => {
+      collapsed = !collapsed;
+      if (toggle) {
+        toggle(id);
+      }
+    }}
   />
   <div class="expandable-body">
     <slot />
