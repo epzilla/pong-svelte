@@ -8,18 +8,16 @@
 
       const match = await matchResult.json();
       const devices = await devicesResult.json();
-      const deviceId = LocalStorage.get('device');
       return {
         props: {
           match,
-          devices,
-          deviceId
+          devices
         }
       };
     } catch (err) {
       return {
         status: 500,
-        error: new Error(`Error doing stuff`)
+        error: err
       };
     }
   }
@@ -28,6 +26,7 @@
 <script>
   import Rest from '../modules/rest';
   import WebSockets from '../modules/websockets';
+  import LocalStorage from '../modules/localStorage';
   import {
     SCORE_UPDATE,
     GAME_FINISHED,
@@ -39,12 +38,13 @@
   import { onMount, onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
 
-  export let deviceId;
+  const device = LocalStorage.get('device');
+  const deviceId = device?.id || null;
   export let devices;
   export let match;
   let gamesCollapsed = {};
 
-  selectDevices = (devices) => {
+  function selectDevices(devices) {
     if (devices && devices.length > 0) {
       this.setState({ showChooseOtherDevice: false }, () => {
         let packet = Object.assign(
@@ -70,7 +70,7 @@
           .catch((e) => this.props.postAlert({ type: 'error', msg: e }));
       });
     }
-  };
+  }
 
   function onScoreUpdateFromElsewhere() {
     let i = match.games.findIndex((g) => g.id === game.id);

@@ -1,5 +1,16 @@
 const BASE_URL = 'https://pong-api.herokuapp.com/';
 
+const get = async (url, body) => {
+  const res = await fetch(`${BASE_URL}${url}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  const data = await res.json();
+  return data;
+};
+
 const post = async (url, body) => {
   const res = await fetch(`${BASE_URL}${url}`, {
     method: 'POST',
@@ -32,4 +43,4 @@ const put = async (url, data) => {
   return json;
 };
 
-export default { post, put };
+export default { get, post, put };

@@ -376,8 +376,7 @@
     .match-info-block {
       color: #aaa;
       font-size: 0.75rem;
-      display: flex;
-      align-items: center;
+      width: 100%;
 
       &.align-top {
         align-items: flex-start;

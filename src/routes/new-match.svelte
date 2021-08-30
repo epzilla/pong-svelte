@@ -51,7 +51,8 @@
   let flippingToP2 = false;
   let p2winsToss = false;
 
-  let deviceId = LocalStorage.get('device');
+  let device = LocalStorage.get('device');
+  let deviceId = device?.id || null;
   let toggledOn = false;
 
   function onMatchStartedElsewhere(match) {
@@ -87,7 +88,7 @@
   }
 
   function onBestOfChange({ amount }) {
-    setState({ bestOf: amount });
+    bestOf = amount;
   }
 
   function onPlayToOptionChange(p) {
@@ -102,7 +103,7 @@
   }
 
   function onPlayToInputChange(e) {
-    setState({ playTo: parseInt(e.target.value) });
+    playTo = parseInt(e.target.value);
   }
 
   function onScoringTypeChange(u) {

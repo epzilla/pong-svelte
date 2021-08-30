@@ -34,18 +34,20 @@
   import { goto } from '$app/navigation';
   import LocalStorage from '../modules/localStorage';
   import WebSockets from '../modules/websockets';
+  import Rest from '../modules/rest';
   import BoxScore from '../components/BoxScore.svelte';
   import LiveScoreboard from '../components/LiveScoreboard.svelte';
   export let recentMatches = [];
   export let currentMatch;
   export let players;
-  export let canUpdateScore;
-  export let matchInProgress;
-  let matchStatus = matchInProgress ? 'Match in Progress' : 'Latest Match';
-  let deviceId = LocalStorage.get('device');
-  onMount(() => {
+  let canUpdateScore = false;
+  let matchStatus = currentMatch ? 'Match in Progress' : 'Latest Match';
+  let device = LocalStorage.get('device');
+  let deviceId = device?.id;
+  onMount(async () => {
     if (deviceId) {
       WebSockets.init(deviceId, false);
+      canUpdateScore = await Rest.get(`matches/can-update-score/${deviceId}`);
     } else {
       goto('/set-device');
     }
@@ -57,7 +59,7 @@
   <LiveScoreboard match={currentMatch} />
 {/if}
 
-{#if matchInProgress}
+{#if currentMatch}
   {#if canUpdateScore}
     <a href="/update-score" class="btn big success update-score">Update Score</a
     >
@@ -75,7 +77,9 @@
   <h3 class="align-center primary-text">Recent Matches</h3>
   <ul>
     {#each recentMatches as match}
-      <BoxScore {match} />
+      {#if !currentMatch || currentMatch.id !== match.id}
+        <BoxScore {match} />
+      {/if}
     {/each}
   </ul>
 {/if}

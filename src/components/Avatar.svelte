@@ -144,6 +144,10 @@
       &:not(.coin) {
         margin: 0 2rem;
       }
+
+      .avatar-initials {
+        font-size: 3rem;
+      }
     }
 
     &.editable {
