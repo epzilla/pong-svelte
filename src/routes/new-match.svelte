@@ -1,7 +1,9 @@
 <script context="module">
+  import { BASE_URL } from '../modules/constants';
+
   export async function load({ fetch }) {
     try {
-      const res = await fetch('https://pong-api.herokuapp.com/players');
+      const res = await fetch(`${BASE_URL}players`);
       const players = await res.json();
       return {
         props: {

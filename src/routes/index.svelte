@@ -1,13 +1,14 @@
 <script context="module">
   import { isEmpty } from '../modules/helpers';
+  import { BASE_URL } from '../modules/constants';
 
   export async function load({ fetch }) {
     try {
       const [recentMatchesResult, currentMatchResult, playersResult] =
         await Promise.all([
-          fetch('https://pong-api.herokuapp.com/matches/most-recent/5'),
-          fetch('https://pong-api.herokuapp.com/matches/current'),
-          fetch('https://pong-api.herokuapp.com/players')
+          fetch(`${BASE_URL}matches/most-recent/5`),
+          fetch(`${BASE_URL}matches/current`),
+          fetch(`${BASE_URL}players`)
         ]);
 
       const recentMatches = await recentMatchesResult.json();

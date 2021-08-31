@@ -1,10 +1,10 @@
 <script context="module">
+  import { BASE_URL } from 'src/modules/constants';
+
   export async function load({ fetch, page }) {
     try {
       const id = await page.params.id;
-      const matchResult = await fetch(
-        `https://pong-api.herokuapp.com/matches/${id}`
-      );
+      const matchResult = await fetch(`${BASE_URL}matches/${id}`);
       const match = await matchResult.json();
       return {
         props: {

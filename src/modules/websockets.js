@@ -1,3 +1,5 @@
+import { WS_BASE_URL } from './constants';
+
 let callbacks = {};
 let ws = null;
 let deviceId = null;
@@ -35,7 +37,7 @@ const WebSockets = {
         deviceId = devId;
         devMode = !!useDevMode;
         try {
-          ws = new WebSocket(`ws://pong-api.herokuapp.com`);
+          ws = new WebSocket(WS_BASE_URL);
           ws.onerror = (e) => console.error(e);
           ws.onopen = () =>
             console.log(

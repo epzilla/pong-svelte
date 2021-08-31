@@ -16,7 +16,9 @@
     "svelte-preprocess": "^4.7.4"
   },
   "dependencies": {
-    "date-fns": "^2.23.0"
+    "date-fns": "^2.23.0",
+    "svelte-frappe-charts": "^1.9.0",
+    "svelte-select": "^4.4.0"
   },
   "prettier": {
     "arrowParens": "always",

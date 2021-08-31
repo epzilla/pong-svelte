@@ -1,10 +1,12 @@
 <!-- svelte-ignore a11y-label-has-associated-control -->
 <script context="module">
+  import { BASE_URL } from '../modules/constants';
+
   export async function load({ fetch }) {
     try {
       const [matchResult, devicesResult] = await Promise.all([
-        fetch('https://pong-api.herokuapp.com/matches/current'),
-        fetch('https://pong-api.herokuapp.com/devices')
+        fetch(`${BASE_URL}matches/current`),
+        fetch(`${BASE_URL}devices`)
       ]);
 
       const match = await matchResult.json();

@@ -1,4 +1,4 @@
-const BASE_URL = 'https://pong-api.herokuapp.com/';
+import { BASE_URL } from './constants';
 
 const get = async (url, body) => {
   const res = await fetch(`${BASE_URL}${url}`, {
