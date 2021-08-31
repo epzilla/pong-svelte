@@ -221,39 +221,63 @@
       <div class="chart-container">
         <h3 class="chart-header no-top-margin">Matches Won</h3>
         <div class="pie-container">
-          <!-- <HeadToHeadPieChart
-                  onPieClick={onMatchesPieClick}
-                  pieData={matchesData}
-                  activeIndex={activeMatchesIndex}
-                  largestValue={largestMatchesValue}
-                /> -->
-          {#if matchesData?.length > 2}
-            <p class="draws-footnote">
-              {stats.player1.matchesDrawn} Draws
-            </p>
-          {/if}
+          <Chart
+            data={{
+              labels: [
+                stats.player1?.player.fname,
+                stats.player2?.player.fname,
+                'Draw'
+              ],
+              datasets: [
+                {
+                  values: [
+                    stats.player1?.matchesWon,
+                    stats.player2?.matchesWon,
+                    stats.player1?.matchesDrawn
+                  ]
+                }
+              ]
+            }}
+            type="pie"
+          />
         </div>
       </div>
       <div class="chart-container">
         <h3 class="chart-header">Games Won</h3>
         <div class="pie-container">
-          <!-- <HeadToHeadPieChart
-                  onPieClick={onGamesPieClick}
-                  pieData={gamesData}
-                  activeIndex={activeGamesIndex}
-                  largestValue={largestGamesValue}
-                /> -->
+          <Chart
+            data={{
+              labels: [
+                stats.player1?.player.fname,
+                stats.player2?.player.fname
+              ],
+              datasets: [
+                {
+                  values: [stats.player1?.gamesWon, stats.player2?.gamesWon]
+                }
+              ]
+            }}
+            type="pie"
+          />
         </div>
       </div>
       <div class="chart-container">
         <h3 class="chart-header">Points Won</h3>
         <div class="pie-container">
-          <!-- <HeadToHeadPieChart
-                  onPieClick={onPointsPieClick}
-                  pieData={pointsData}
-                  activeIndex={activePointsIndex}
-                  largestValue={largestPointsValue}
-                /> -->
+          <Chart
+            data={{
+              labels: [
+                stats.player1?.player.fname,
+                stats.player2?.player.fname
+              ],
+              datasets: [
+                {
+                  values: [stats.player1?.pointsFor, stats.player2?.pointsFor]
+                }
+              ]
+            }}
+            type="pie"
+          />
         </div>
       </div>
       <div class="chart-container full-width">
@@ -277,6 +301,4 @@
       </div>
     </div>
   {/if}
-  <!-- <Chart {data} type="line" /> -->
-  <!-- <p>{JSON.stringify(playerOptions)}</p> -->
 </div>
