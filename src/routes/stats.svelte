@@ -34,9 +34,6 @@
   let resultHR;
 
   let stats;
-  let matchesData;
-  let gamesData;
-  let pointsData;
   let perGameData;
   let largestMatchesValue = 0;
   let largestGamesValue = 0;
@@ -100,36 +97,6 @@
       stats = await Rest.get(
         `stats/head-to-head/${player1.value}/${player2.value}${dateQuery}`
       );
-      matchesData = [
-        {
-          label: stats.player1.player.fname,
-          wins: stats.player1.matchesWon
-        },
-        {
-          label: stats.player2.player.fname,
-          wins: stats.player2.matchesWon
-        }
-      ];
-      if (stats.player1.matchesDrawn > 0) {
-        matchesData.splice(1, 0, {
-          label: 'Draws',
-          wins: stats.player1.matchesDrawn
-        });
-      }
-      gamesData = [
-        { label: stats.player1.player.fname, wins: stats.player1.gamesWon },
-        { label: stats.player2.player.fname, wins: stats.player2.gamesWon }
-      ];
-      pointsData = [
-        {
-          label: stats.player1.player.fname,
-          wins: stats.player1.pointsFor
-        },
-        {
-          label: stats.player2.player.fname,
-          wins: stats.player2.pointsFor
-        }
-      ];
       perGameData = stats.player1.perGame.map((pg) => {
         pg.player1 = stats.player1.player.fname;
         pg.player2 = stats.player2.player.fname;
@@ -137,6 +104,7 @@
         pg[stats.player2.player.fname] = pg.avgPointsAgainst;
         return pg;
       });
+      console.log({ perGameData });
       largestMatchesValue = Math.max(
         stats.player1.matchesWon,
         stats.player2.matchesWon
@@ -290,6 +258,23 @@
                   width={lineChartWidth}
                   height={lineChartHeight}
                 /> -->
+          <Chart
+            data={{
+              labels: perGameData.map((pg, i) => `Game ${i + 1}`),
+              datasets: [
+                {
+                  values: perGameData.map((pg) => pg.avgPointsFor)
+                },
+                {
+                  values: perGameData.map((pg) => pg.avgPointsAgainst)
+                }
+              ]
+            }}
+            type="line"
+            lineOptions={{
+              regionFill: 1
+            }}
+          />
         </div>
       </div>
       <hr class="result-hr" />
