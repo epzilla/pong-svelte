@@ -57,7 +57,7 @@
   import Stepper from '../components/Stepper.svelte';
   import Toggle from '../components/Toggle.svelte';
   import { getScoreHeaderLine, getTeamName, isEmpty } from '../modules/helpers';
-  import { currentMatch } from '../modules/stores';
+  import { addAlert, currentMatch } from '../modules/stores';
 
   const device = LocalStorage.get('device');
   const deviceId = device?.id || null;
@@ -73,7 +73,7 @@
       showChooseOtherDevice = false;
       let packet = Object.assign(
         {
-          deviceId: props.device.id
+          deviceId
         },
         state
       );
@@ -89,9 +89,9 @@
           } else {
             msg += `${devices[0].name}.`;
           }
-          props.postAlert({ type: 'info', msg });
+          addAlert({ type: 'info', msg });
         })
-        .catch((e) => props.postAlert({ type: 'error', msg: e }));
+        .catch((e) => addAlert({ type: 'error', msg: e }));
     }
   }
 
