@@ -50,6 +50,7 @@ export const END_MATCH_AFFIRMATIVE = `Yep! It's Over, son!`;
 export const END_MATCH_NEGATIVE = 'Oops! No.';
 export const END_MATCH_CONFIRMATION_PROMPT =
   'Are you sure you want to end this match?';
+export const FINAL = 'Final';
 export const FINAL_TOGGLE_LABEL = 'Final?';
 export const FILTER_BY_DATE = 'Filter by date';
 export const FLIP_COIN = 'Flip Coin for 1st Serve';
@@ -60,6 +61,8 @@ export const GAMES_WON = 'Games Won';
 export const HEAD_TO_HEAD_LABEL = 'Head-to-Head Stats for:';
 export const HERE_GOES = 'Here goes...';
 export const LET_OTHERS_UPDATE = 'Let Others Update';
+export const LIVE_SCORING_UPDATES_DISABLED =
+  'Live scoring updates have been disabled for this match. Scores will only update between games.';
 export const MATCH_RESULTS = 'Match Results';
 export const MATCH_SUMMARY = 'Match Summary';
 export const MATCHES_WON = 'Matches Won';
@@ -105,8 +108,13 @@ export const ALERT_MATCH_STARTED = (
 ) => `${alert.player1Fname} and ${alert.player2Fname} just started a match. ${clickOrTap}
       here to view.`;
 export const FIRST_SERVE_PROMPT = (player) => `${player.fname} serves first!`;
+export const GAMES_PLAYED_TO_AMOUNT = (amount) =>
+  `Games played to ${amount} points.`;
+export const PLAYING_ALL_OR_BEST_OF = (match) =>
+  `${match.playAllGames ? 'Playing all' : 'Best of'} ${match.bestOf} games.`;
 export const PLAYING_TO_AND_BEST_OF_PROMPT = (match) =>
   `Playing to ${match.playTo}, ${match.playAllGames ? 'total of' : 'best of'} ${
     match.bestOf
   } games.`;
 export const SELECT_PLAYER_NUM = (num) => `Select Player ${num}`;
+export const STARTED_TIME_AGO = (timeAgo) => `Started ${timeAgo}`;

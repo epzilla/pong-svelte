@@ -1,5 +1,12 @@
 <script>
   import {
+    FINAL,
+    GAMES_PLAYED_TO_AMOUNT,
+    LIVE_SCORING_UPDATES_DISABLED,
+    PLAYING_ALL_OR_BEST_OF,
+    STARTED_TIME_AGO
+  } from '../modules/constants';
+  import {
     getFormattedMatchDate,
     getMatchTimeAgo,
     getTeamName,
@@ -152,7 +159,7 @@
   <div class="score-row stats-row flex-center">
     {#if match?.finished}
       <div class="flex-col flex-center">
-        <p class="final flex-center">Final</p>
+        <p class="final flex-center">{FINAL}</p>
         <p class="font-small center">{stats?.resultString}</p>
         <p class="font-small center">{stats?.pointsWonString}</p>
       </div>
@@ -160,26 +167,22 @@
       <p class="flex-col" />
       <p class="match-info-block">
         <i class="fa fa-clock-o" />
-        <span class="match-info">Started {getMatchTimeAgo(match)}</span>
+        <span class="match-info"
+          >{STARTED_TIME_AGO(getMatchTimeAgo(match))}</span
+        >
       </p>
       <p class="match-info-block">
         <i class="fa fa-bullseye" />
-        <span class="match-info">Games played to {match.playTo} points.</span>
+        <span class="match-info">{GAMES_PLAYED_TO_AMOUNT(match.playTo)}</span>
       </p>
       <p class="match-info-block">
         <i class={`fa fa-hourglass-${getHourGlassIcon(match, currentGame)}`} />
-        <span class="match-info"
-          >{match.playAllGames ? 'Playing all' : 'Best of'}
-          {match.bestOf} games.</span
-        >
+        <span class="match-info">{PLAYING_ALL_OR_BEST_OF(match)}</span>
       </p>
       {#if match?.updateEveryPoint}
         <p class="match-info-block align-top">
           <i class="fa fa-asterisk" />
-          <span class="match-info"
-            >Live scoring updates have been disabled for this match. Scores will
-            only update between games.</span
-          >
+          <span class="match-info">{LIVE_SCORING_UPDATES_DISABLED}</span>
         </p>
       {/if}
     {/if}
