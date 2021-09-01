@@ -37,6 +37,8 @@
   import {
     ADDED_DEVICES_TO_MATCH,
     CLICK,
+    DEVICE_TYPES,
+    GRANTED_ACCESS_TO_UPDATE_SCORE,
     MATCH_STARTED,
     RECENT_MATCHES,
     START_A_NEW_MATCH,
@@ -62,12 +64,14 @@
   }
 
   function onDevicesAdded({ match, deviceIds }) {
-    if (!canUpdateScore && deviceIds.some((d) => d.id === deviceId)) {
+    if (!canUpdateScore && deviceIds.indexOf(deviceId) !== -1) {
       canUpdateScore = true;
       addAlert({
         type: 'success',
         msg: GRANTED_ACCESS_TO_UPDATE_SCORE(clickOrTap),
-        timeout: 10000
+        timeout: 10000,
+        clickable: true,
+        action: () => goto('/update-score')
       });
     }
   }

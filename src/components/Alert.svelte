@@ -36,8 +36,8 @@
   out:fly={{ y: 200, duration: 500 }}
   class={`alert alert-${alert.type}${alert.clickable ? ' clickable' : ''}`}
   on:click={() => {
-    if (alert.type === MATCH_STARTED) {
-      goto('/');
+    if (alert.action) {
+      alert.action();
       dismiss(index);
     }
   }}

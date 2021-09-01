@@ -43,6 +43,7 @@
   import HeadingWithExtenderLines from '../components/HeadingWithExtenderLines.svelte';
   import { onMount, onDestroy } from 'svelte';
   import { addAlert } from '../modules/stores';
+  import { goto } from '$app/navigation';
   export let playerOptions;
 
   const dateFormat = 'yyyy-MM-dd';
@@ -114,7 +115,8 @@
       type: MATCH_STARTED,
       msg: match,
       timeout: 15000,
-      clickable: true
+      clickable: true,
+      action: goto('/')
     });
   }
 
