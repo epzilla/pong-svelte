@@ -45,10 +45,18 @@ const WebSockets = {
             );
           ws.onclose = () => console.debug('WebSocket connection closed');
           ws.onmessage = (m) => {
-            if (m && m.data) {
+            if (devMode && m) {
+              console.debug(`[Websockets] Message received`, m);
+            }
+            if (m?.data) {
               let json = JSON.parse(m.data);
-              if (json && json.data) {
+              if (json?.data) {
                 fireCallbacks(json, m.originDeviceId);
+              } else if (devMode && json) {
+                console.debug(
+                  '[Websockets] Message improperly formatted',
+                  json
+                );
               }
             }
           };

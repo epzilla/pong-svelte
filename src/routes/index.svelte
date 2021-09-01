@@ -45,10 +45,11 @@
   let canUpdateScore = false;
   let matchStatus = currentMatch ? 'Match in Progress' : 'Latest Match';
   let device = LocalStorage.get('device');
+  let devMode = LocalStorage.get('dev-mode');
   let deviceId = device?.id;
   onMount(async () => {
     if (deviceId) {
-      WebSockets.init(deviceId, false);
+      WebSockets.init(deviceId, !!devMode);
       canUpdateScore = await Rest.get(`matches/can-update-score/${deviceId}`);
     } else {
       goto('/set-device');
