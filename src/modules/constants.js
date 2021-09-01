@@ -28,6 +28,8 @@ export const SCORE_UPDATE = 'score-update';
 export const CONFIRM_END_MATCH = 'Confirm End Match';
 export const DEVICE_CANNOT_UPDATE_MATCH =
   'This device is not authorized to update this match. Please ask the person who started this match to grant you permission.';
+export const DEVICE_NAME = 'Device Name';
+export const DEVICE_TYPE = 'Device Type';
 export const END_MATCH = 'End Match';
 export const END_MATCH_AFFIRMATIVE = `Yep! It's Over, son!`;
 export const END_MATCH_NEGATIVE = 'Oops! No.';
@@ -62,6 +64,7 @@ export const START_NEW_ONE = 'Start a new one!';
 export const SUBMIT = 'Submit';
 export const TO = 'to';
 export const UPDATE_SCORE = 'Update Score';
+export const WELCOME_EXCLAM = 'Welcome!';
 
 // String interpolations
 export const PLAYING_TO_AND_BEST_OF_PROMPT = (match) =>

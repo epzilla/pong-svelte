@@ -2,9 +2,12 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import {
+    DEVICE_NAME,
+    DEVICE_TYPE,
     NAME_ALREADY_EXISTS,
     NO_NAME_ENTERED,
-    SET_DEVICE_NAME_PROMPT
+    SET_DEVICE_NAME_PROMPT,
+    WELCOME_EXCLAM
   } from '../modules/constants';
   import { getBestGuessDevice } from '../modules/helpers';
   import Rest from '../modules/rest';
@@ -81,14 +84,14 @@
 </script>
 
 <div class="main set-device">
-  <h2>Welcome!</h2>
+  <h2>{WELCOME_EXCLAM}</h2>
   <p>{SET_DEVICE_NAME_PROMPT}</p>
   <form
     class="set-device flex-1 flex-col pad-1rem"
     on:submit={(e) => submit(e)}
   >
     <div class="form-group big">
-      <label for="name">Device Name</label>
+      <label for="name">{DEVICE_NAME}</label>
       <!-- svelte-ignore a11y-positive-tabindex -->
       <input
         type="text"
@@ -104,7 +107,7 @@
       {/if}
     </div>
     <div class="form-group big">
-      <label for="name">Device Type</label>
+      <label for="name">{DEVICE_TYPE}</label>
       <DeviceTypePicker selectedType={type} callback={setDeviceType} />
     </div>
     <!-- svelte-ignore a11y-positive-tabindex -->
