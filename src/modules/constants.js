@@ -1,4 +1,4 @@
-export const WS_BASE_URL = 'ws://pong-api.herokuapp.com';
+export const WS_BASE_URL = 'wss://pong-api.herokuapp.com';
 export const BASE_URL = 'https://pong-api.herokuapp.com/';
 export const DEVICE_TYPES = {
   MOBILE_DEVICE: 'Mobile',
