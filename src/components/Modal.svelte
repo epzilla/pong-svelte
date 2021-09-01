@@ -62,10 +62,6 @@
     justify-content: center;
     align-items: center;
     padding: 0 1rem;
-
-    > p {
-      margin-top: 0;
-    }
   }
 
   .modal-btn-container {

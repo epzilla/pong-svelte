@@ -201,10 +201,6 @@
     min-width: 40vw;
     max-width: calc(100vw - 1rem);
 
-    h3 {
-      margin: 0;
-    }
-
     @media screen and (max-width: 700px) {
       min-width: 65vw;
     }
@@ -413,17 +409,6 @@
     margin: 1rem;
     padding: 0.5rem 1.5rem;
 
-    h1 {
-      font-size: 2rem;
-      text-align: center;
-      font-weight: 500;
-      margin-bottom: 0;
-
-      @media (min-width: 800px) {
-        font-size: 4rem;
-      }
-    }
-
     .lede {
       color: var(--primary);
       font-size: 1rem;
@@ -434,10 +419,6 @@
   @media (min-width: 800px) {
     .jumbotron {
       padding: 1rem 2rem;
-
-      h1 {
-        font-size: 4rem;
-      }
 
       .lede {
         margin: 1rem 0;

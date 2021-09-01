@@ -1,7 +1,6 @@
 <script>
   import Avatar from './Avatar.svelte';
   export let item;
-  export let highlighted;
 </script>
 
 <div class="flex-center">

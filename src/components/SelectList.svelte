@@ -68,10 +68,6 @@
           #bcd3e8
         );
       }
-
-      .fa {
-        margin-right: 1rem;
-      }
     }
 
     &.device-select-list li {

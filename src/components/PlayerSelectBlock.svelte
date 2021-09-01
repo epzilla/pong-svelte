@@ -2,7 +2,6 @@
   import { SELECT_PLAYER_OR_PARTNER } from '../modules/constants';
   import Avatar from './Avatar.svelte';
   export let player;
-  export let doubles;
   export let num;
   export let selectCallback;
   export let selectBtnText;
@@ -33,11 +32,6 @@
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
-
-    > h3 {
-      font-size: 1.5rem;
-      margin-bottom: 0.25rem;
-    }
 
     &.empty {
       border: 1px dashed #aaa;

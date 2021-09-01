@@ -133,12 +133,6 @@
     border-radius: 50%;
     margin: 0 1rem;
 
-    &.medium {
-      height: 4rem;
-      width: 4rem;
-      margin: 0 2rem;
-    }
-
     &.big {
       height: 6rem;
       width: 6rem;
@@ -155,10 +149,6 @@
       cursor: pointer;
     }
 
-    &.can-drop {
-      box-shadow: 0px 0px 6px 6px #38ce64;
-    }
-
     &.empty {
       border: none;
 
@@ -171,19 +161,6 @@
 
     .edit-overlay {
       display: none;
-    }
-
-    .btn {
-      position: absolute;
-      bottom: 0;
-
-      &.save {
-        left: -1rem;
-      }
-
-      &.cancel {
-        right: -1rem;
-      }
     }
 
     &:hover .edit-overlay {
@@ -207,20 +184,6 @@
     input {
       visibility: hidden;
     }
-  }
-
-  .coin p {
-    font-family: georgia;
-    font-style: italic;
-    position: absolute;
-    font-size: 28px;
-    z-index: 700;
-    top: -19px;
-    left: 19px;
-  }
-
-  .coin.silver p {
-    color: rgba(160, 160, 160, 1);
   }
 
   .coin {

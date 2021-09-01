@@ -50,11 +50,6 @@
 </div>
 
 <style lang="scss">
-  .fixed-alerts {
-    .alert {
-      flex: 1 0 0%;
-    }
-  }
   .alert {
     display: flex;
     background-color: #b4d3f2;
