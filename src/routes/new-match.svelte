@@ -582,6 +582,7 @@
   /* hide back of pane during swap */
   .front,
   .back {
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     position: absolute;
     top: 0;
