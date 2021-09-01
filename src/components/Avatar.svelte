@@ -192,7 +192,6 @@
     height: 52px;
     position: relative;
     margin: 5px;
-    top: 6px;
     border-radius: 3rem;
     z-index: 500;
     box-shadow: 0px 0px 0px 1px rgba(146, 146, 146, 0.49),
@@ -224,6 +223,10 @@
       height: 4rem;
       width: 4rem;
       margin: 0 0.5rem;
+
+      .avatar-initials {
+        font-size: 2rem;
+      }
     }
   }
 </style>
