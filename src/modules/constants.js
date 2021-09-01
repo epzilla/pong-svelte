@@ -36,6 +36,7 @@ export const BEGIN = 'Begin';
 export const BEST_OF = 'Best of';
 export const CHANGE = 'Change';
 export const CLICK = 'Click';
+export const CLICK_TO_CHANGE = 'Click to change';
 export const CONFIRM_END_MATCH = 'Confirm End Match';
 export const DEVICE_CANNOT_UPDATE_MATCH =
   'This device is not authorized to update this match. Please ask the person who started this match to grant you permission.';

@@ -1,5 +1,6 @@
 <script>
   import Rest from '../modules/rest';
+  import { CLICK_TO_CHANGE } from '../modules/constants';
 
   export let avatar = '';
   export let avatarUpdatedCallback = null;
@@ -93,7 +94,7 @@
   >
     <input type="file" value={newAvatar} onChange={processChange} />
     <div class="edit-overlay">
-      <span>Click to change</span>
+      <span>{CLICK_TO_CHANGE}</span>
     </div>
   </div>
 {:else}
