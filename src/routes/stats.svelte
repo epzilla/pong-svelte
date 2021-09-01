@@ -32,7 +32,7 @@
     TO
   } from '../modules/constants';
   import format from 'date-fns/format/index.js';
-  import isAfter from 'date-fns/isAfter';
+  import isAfter from 'date-fns/isAfter/index.js';
   import Chart from 'svelte-frappe-charts';
   import Select from 'svelte-select';
   import Rest from '../modules/rest';
