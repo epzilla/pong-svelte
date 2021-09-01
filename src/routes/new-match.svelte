@@ -1,4 +1,3 @@
-<!-- svelte-ignore a11y-label-has-associated-control -->
 <script context="module">
   import { BASE_URL } from '../modules/constants';
 
@@ -301,7 +300,7 @@
 <div class="match-settings flex-col">
   <div class="flex-col margin-bottom-1rem">
     <div class="stepper-wrap flex-center">
-      <label class="label">{BEST_OF}</label>
+      <span class="label">{BEST_OF}</span>
       <Stepper
         full
         onChange={onBestOfChange}
@@ -309,11 +308,11 @@
         min={1}
         max={7}
       />
-      <label class="label">{GAMES}</label>
+      <span class="label">{GAMES}</span>
     </div>
     <hr />
     <div class="flex-center flex-col controls-col">
-      <label class="label">{PLAY_TO}</label>
+      <span class="label">{PLAY_TO}</span>
       <SegmentedControl
         options={[
           { label: '11', value: 11 },
@@ -337,7 +336,7 @@
     </div>
     <hr />
     <div class="flex-center flex-col controls-col">
-      <label class="label">{PLAY_ALL_GAMES}</label>
+      <span class="label">{PLAY_ALL_GAMES}</span>
       <SegmentedControl
         options={[
           { label: YES, value: 1 },
@@ -349,7 +348,7 @@
     </div>
     <hr />
     <div class="flex-center flex-col controls-col">
-      <label class="label">{UPDATE_SCORES}</label>
+      <span class="label">{UPDATE_SCORES}</span>
       <SegmentedControl
         options={[
           { label: AFTER_EACH_GAME, value: 0 },
@@ -391,9 +390,9 @@
   <div class="match-settings first-serve">
     <div class="flex-center flex-col controls-col">
       {#if firstServe}
-        <label class="label">{FIRST_SERVE_PROMPT(firstServe)}</label>
+        <span class="label">{FIRST_SERVE_PROMPT(firstServe)}</span>
       {:else}
-        <label class="label">{HERE_GOES}</label>
+        <span class="label">{HERE_GOES}</span>
       {/if}
     </div>
   </div>
@@ -421,34 +420,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    hr {
-      width: 400px;
-      max-width: 95%;
-      margin-bottom: 2rem;
-      margin-top: 2rem;
-    }
-
-    .btn {
-      min-height: 50px;
-      font-size: 1.2rem;
-
-      &.big.begin-match-btn {
-        font-size: 1.35rem;
-        height: 60px;
-        min-width: 300px;
-      }
-    }
-
-    .doubles-switch {
-      margin-bottom: 1rem;
-    }
-
-    .team-select-block .btn {
-      min-height: unset;
-      font-size: 1rem;
-      padding: 0.5rem;
-    }
 
     .match-settings {
       .label {
@@ -487,10 +458,6 @@
   .team-select-block {
     display: flex;
     flex-direction: column;
-
-    .avatar {
-      margin: 0 0.5rem 0 1.5rem;
-    }
   }
 
   .player-selected-block,
@@ -508,11 +475,6 @@
   .player-selected-block {
     display: flex;
     align-items: center;
-
-    > h3 {
-      font-size: 1.5rem;
-      margin-bottom: 0.25rem;
-    }
 
     &.empty {
       border: 1px dashed #aaa;
@@ -572,11 +534,6 @@
   .flip-container {
     display: block !important;
     perspective: 1000px;
-
-    .avatar.big {
-      margin: 0;
-      font-size: 2rem;
-    }
   }
 
   .flip-container.flipping,
