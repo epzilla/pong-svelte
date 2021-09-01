@@ -1,4 +1,5 @@
 <script>
+  import { SELECT_PLAYER_OR_PARTNER } from '../modules/constants';
   import Avatar from './Avatar.svelte';
   export let player;
   export let doubles;
@@ -22,7 +23,7 @@
         >{selectBtnText}</button
       >
     {:else}
-      <h3>Select {isPartner ? 'Partner' : 'Player'}</h3>
+      <h3>{SELECT_PLAYER_OR_PARTNER(isPartner)}</h3>
     {/if}
   </div>
 </div>

@@ -119,4 +119,6 @@ export const PLAYING_TO_AND_BEST_OF_PROMPT = (match) =>
     match.bestOf
   } games.`;
 export const SELECT_PLAYER_NUM = (num) => `Select Player ${num}`;
+export const SELECT_PLAYER_OR_PARTNER = (isPartner) =>
+  `Select ${isPartner ? 'Partner' : 'Player'}`;
 export const STARTED_TIME_AGO = (timeAgo) => `Started ${timeAgo}`;
