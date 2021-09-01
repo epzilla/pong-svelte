@@ -3,7 +3,12 @@
   import Modal from './Modal.svelte';
   import SelectList from './SelectList.svelte';
   import { addAlert } from '../modules/stores';
-  import { NO_DEVICES_SELECTED_ERROR } from '../modules/constants';
+  import {
+    CHOOSE_DEVICES_PROMPT,
+    NO_DEVICES_SELECTED_ERROR,
+    SELECT_DEVICES_HEADER,
+    SHARE
+  } from '../modules/constants';
   export let devices = [];
   export let onSelect;
   export let dismiss;
@@ -33,11 +38,8 @@
 
 <Modal {dismiss} {show}>
   <svelte:fragment slot="header">
-    <h2>Select Devices</h2>
-    <p>
-      Choose one or more other registered devices who can update scores for this
-      match. Hit the "Share" button when you're done.
-    </p>
+    <h2>{SELECT_DEVICES_HEADER}</h2>
+    <p>{CHOOSE_DEVICES_PROMPT}</p>
   </svelte:fragment>
   <svelte:fragment slot="content">
     <div class="flex-1 flex-col margin-bottom-1rem">
@@ -52,7 +54,7 @@
       </div>
     </div>
     <div class="btn-wrap margin-1rem flex-shrink-0 flex-col">
-      <button class="btn big success" on:click={submit}>Share</button>
+      <button class="btn big success" on:click={submit}>{SHARE}</button>
     </div>
   </svelte:fragment>
 </Modal>

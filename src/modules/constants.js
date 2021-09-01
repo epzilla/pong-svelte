@@ -36,6 +36,7 @@ export const BEGIN = 'Begin';
 export const BEST_OF = 'Best of';
 export const CANCEL = 'Cancel';
 export const CHANGE = 'Change';
+export const CHOOSE_DEVICES_PROMPT = `Choose one or more other registered devices who can update scores for this match. Hit the "Share" button when you're done.`;
 export const CLICK = 'Click';
 export const CLICK_TO_CHANGE = 'Click to change';
 export const CONFIRM_END_MATCH = 'Confirm End Match';
@@ -84,11 +85,13 @@ export const PLAYER_NAME_ALREADY_EXISTS =
 export const POINT_BY_POINT = 'Point-by-point';
 export const POINTS_WON = 'Points Won';
 export const RECENT_MATCHES = 'Recent Matches';
+export const SELECT_DEVICES_HEADER = 'Select Devices';
 export const SET_DEVICE_NAME_PROMPT = `
   It doesn't look like you've used Pong Tracker on this device before.
   Please take a moment to give this device a name, so that you can
   use it to update scores.
 `;
+export const SHARE = 'Share';
 export const SINGLES = 'Singles';
 export const SITE_TITLE = 'Pong Tracker';
 export const START_A_NEW_MATCH = 'Start a New Match';
