@@ -57,8 +57,8 @@
 
   export let players;
   let doubles = false;
-  let player1 = null;
-  let player2 = null;
+  $: player1 = players?.length > 0 && players?.length <= 2 ? players[0] : null;
+  $: player2 = players?.length === 2 ? players[1] : null;
   let partner1 = null;
   let partner2 = null;
   let isSelectingPlayer = 0;
@@ -227,8 +227,8 @@
   onMount(() => {
     WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
     let cachedState = LocalStorage.get('start-match-state');
-    player1 = cachedState?.player1;
-    player2 = cachedState?.player2;
+    player1 = cachedState?.player1 || player1;
+    player2 = cachedState?.player2 || player2;
     if (cachedState?.doubles) {
       partner1 = cachedState?.partner1;
       partner2 = cachedState?.partner2;
