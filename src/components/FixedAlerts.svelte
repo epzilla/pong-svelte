@@ -1,5 +1,5 @@
 <script>
-  import { alerts } from '../modules/stores/alert-store';
+  import { alerts } from '../modules/stores';
   import Alert from './Alert.svelte';
   export let device = '';
 

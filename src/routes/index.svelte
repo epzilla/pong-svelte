@@ -38,6 +38,11 @@
   import Rest from '../modules/rest';
   import BoxScore from '../components/BoxScore.svelte';
   import LiveScoreboard from '../components/LiveScoreboard.svelte';
+  import {
+    RECENT_MATCHES,
+    START_A_NEW_MATCH,
+    UPDATE_SCORE
+  } from '../modules/constants';
   export let recentMatches = [];
   export let currentMatch;
   export let players;
@@ -62,20 +67,21 @@
 
 {#if !isEmpty(currentMatch)}
   {#if canUpdateScore}
-    <a href="/update-score" class="btn big success update-score">Update Score</a
+    <a href="/update-score" class="btn big success update-score"
+      >{UPDATE_SCORE}</a
     >
   {/if}
 {:else if deviceId}
   <div class="flex-row flex-center pad-1rem">
     <a href="/new-match" class="btn big primary center margin-top-1rem"
-      >Start New Match</a
+      >{START_A_NEW_MATCH}</a
     >
   </div>
 {/if}
 
 {#if recentMatches.length > 0}
   <hr />
-  <h3 class="align-center primary-text">Recent Matches</h3>
+  <h3 class="align-center primary-text">{RECENT_MATCHES}</h3>
   <ul>
     {#each recentMatches as match}
       {#if !currentMatch || currentMatch.id !== match.id}

@@ -12,7 +12,7 @@
   import { getBestGuessDevice } from '../modules/helpers';
   import Rest from '../modules/rest';
   import LocalStorage from '../modules/localStorage';
-  import { addAlert } from '../modules/stores/alert-store';
+  import { addAlert } from '../modules/stores';
   import DeviceTypePicker from '../components/DeviceTypePicker.svelte';
 
   let error = '';

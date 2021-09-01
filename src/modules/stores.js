@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { generateGuid } from '../helpers';
+import { generateGuid } from './helpers';
 
 export const alerts = writable([]);
 
@@ -12,3 +12,5 @@ export const addAlert = (alert) => {
     return [...n, { ...alert, id }];
   });
 };
+
+export const currentMatch = writable({});

@@ -1,3 +1,4 @@
+<!-- svelte-ignore a11y-label-has-associated-control -->
 <script context="module">
   import { BASE_URL } from '../modules/constants';
 
@@ -22,7 +23,28 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
-  import { MATCH_STARTED } from '../modules/constants';
+  import {
+    AFTER_EACH_GAME,
+    BEGIN,
+    BEST_OF,
+    CHANGE,
+    DOUBLES,
+    FIRST_SERVE_PROMPT,
+    FLIP_COIN,
+    GAMES,
+    HERE_GOES,
+    MATCH_STARTED,
+    NO,
+    OTHER,
+    PLAY_ALL_GAMES,
+    PLAY_TO,
+    POINT_BY_POINT,
+    SINGLES,
+    START_A_NEW_MATCH,
+    UPDATE_SCORES,
+    VS_ABBREV,
+    YES
+  } from '../modules/constants';
   import LocalStorage from '../modules/localStorage';
   import Rest from '../modules/rest';
   import WebSockets from '../modules/websockets';
@@ -31,6 +53,7 @@
   import SegmentedControl from '../components/SegmentedControl.svelte';
   import PlayerSelectBlock from '../components/PlayerSelectBlock.svelte';
   import SelectPlayerModal from '../components/SelectPlayerModal.svelte';
+  import { currentMatch } from '../modules/stores';
 
   export let players;
   let doubles = false;
@@ -58,6 +81,7 @@
   let toggledOn = false;
 
   function onMatchStartedElsewhere(match) {
+    currentMatch.set(match);
     goto('/');
   }
 
@@ -143,6 +167,7 @@
         matchIds.push(match.id);
       }
       LocalStorage.set('match-ids', matchIds);
+      currentMatch.set(match);
       goto('/update-score');
     });
   }
@@ -215,12 +240,12 @@
   });
 </script>
 
-<h2>Start a New Match</h2>
+<h2>{START_A_NEW_MATCH}</h2>
 <div class="doubles-switch">
   <SegmentedControl
     options={[
-      { label: 'Singles', value: false },
-      { label: 'Doubles', value: true }
+      { label: SINGLES, value: false },
+      { label: DOUBLES, value: true }
     ]}
     value={doubles}
     onChange={() => (doubles = !doubles)}
@@ -235,7 +260,7 @@
       player={player1}
       num={1}
       selectCallback={() => (isSelectingPlayer = 1)}
-      selectBtnText="Change"
+      selectBtnText={CHANGE}
     />
     {#if doubles}
       <PlayerSelectBlock
@@ -244,12 +269,12 @@
         player={partner1}
         num={3}
         selectCallback={() => (isSelectingPlayer = 3)}
-        selectBtnText="Change"
+        selectBtnText={CHANGE}
       />
     {/if}
   </div>
   <div class="player-selected-block flex-center">
-    <div class="versus-separator">vs.</div>
+    <div class="versus-separator">{VS_ABBREV}</div>
   </div>
   <div class="team-select-block">
     <PlayerSelectBlock
@@ -258,7 +283,7 @@
       player={player2}
       num={2}
       selectCallback={() => (isSelectingPlayer = 2)}
-      selectBtnText="Change"
+      selectBtnText={CHANGE}
     />
     {#if doubles}
       <PlayerSelectBlock
@@ -267,7 +292,7 @@
         player={partner2}
         num={4}
         selectCallback={() => (isSelectingPlayer = 4)}
-        selectBtnText="Change"
+        selectBtnText={CHANGE}
       />
     {/if}
   </div>
@@ -276,7 +301,7 @@
 <div class="match-settings flex-col">
   <div class="flex-col margin-bottom-1rem">
     <div class="stepper-wrap flex-center">
-      <label class="label">Best of</label>
+      <label class="label">{BEST_OF}</label>
       <Stepper
         full
         onChange={onBestOfChange}
@@ -284,16 +309,16 @@
         min={1}
         max={7}
       />
-      <label class="label">Games</label>
+      <label class="label">{GAMES}</label>
     </div>
     <hr />
     <div class="flex-center flex-col controls-col">
-      <label class="label">Play to</label>
+      <label class="label">{PLAY_TO}</label>
       <SegmentedControl
         options={[
           { label: '11', value: 11 },
           { label: '21', value: 21 },
-          { label: 'Other', value: -1 }
+          { label: OTHER, value: -1 }
         ]}
         value={selectedPlayToOption}
         onChange={onPlayToOptionChange}
@@ -312,11 +337,11 @@
     </div>
     <hr />
     <div class="flex-center flex-col controls-col">
-      <label class="label">Play all games, even if match clinched?</label>
+      <label class="label">{PLAY_ALL_GAMES}</label>
       <SegmentedControl
         options={[
-          { label: 'Yes', value: 1 },
-          { label: 'No', value: 0 }
+          { label: YES, value: 1 },
+          { label: NO, value: 0 }
         ]}
         value={playAllGames}
         onChange={onPlayAllChange}
@@ -324,11 +349,11 @@
     </div>
     <hr />
     <div class="flex-center flex-col controls-col">
-      <label class="label">Update scores</label>
+      <label class="label">{UPDATE_SCORES}</label>
       <SegmentedControl
         options={[
-          { label: 'After each game', value: 0 },
-          { label: 'Point-by-point', value: 1 }
+          { label: AFTER_EACH_GAME, value: 0 },
+          { label: POINT_BY_POINT, value: 1 }
         ]}
         value={updateEveryPoint}
         onChange={onScoringTypeChange}
@@ -358,7 +383,7 @@
 {#if !firstServe && !showCoinToss}
   <div class="match-settings">
     <button class="btn secondary big" on:click={() => flipCoin()}
-      >Flip Coin for 1st Serve</button
+      >{FLIP_COIN}</button
     >
   </div>
 {/if}
@@ -366,9 +391,9 @@
   <div class="match-settings first-serve">
     <div class="flex-center flex-col controls-col">
       {#if firstServe}
-        <label class="label">{firstServe.fname} serves first!</label>
+        <label class="label">{FIRST_SERVE_PROMPT(firstServe)}</label>
       {:else}
-        <label class="label">Here goes...</label>
+        <label class="label">{HERE_GOES}</label>
       {/if}
     </div>
   </div>
@@ -376,7 +401,7 @@
 <hr />
 <div class="start-btn-wrap margin-bottom-1rem">
   <button class="btn success big begin-match-btn" on:click={() => beginMatch()}
-    >Begin</button
+    >{BEGIN}</button
   >
 </div>
 

@@ -57,6 +57,7 @@
   import Stepper from '../components/Stepper.svelte';
   import Toggle from '../components/Toggle.svelte';
   import { getScoreHeaderLine, getTeamName, isEmpty } from '../modules/helpers';
+  import { currentMatch } from '../modules/stores';
 
   const device = LocalStorage.get('device');
   const deviceId = device?.id || null;
@@ -217,6 +218,7 @@
             LocalStorage.set('match-ids', matchIds);
           }
         }
+        currentMatch.set({});
         goto(`/match-summary/${match.id}`);
       });
     }

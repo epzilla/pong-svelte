@@ -2,7 +2,7 @@
   import DeviceListItem from './DeviceListItem.svelte';
   import Modal from './Modal.svelte';
   import SelectList from './SelectList.svelte';
-  import { addAlert } from '../modules/stores/alert-store';
+  import { addAlert } from '../modules/stores';
   import { NO_DEVICES_SELECTED_ERROR } from '../modules/constants';
   export let devices = [];
   export let onSelect;

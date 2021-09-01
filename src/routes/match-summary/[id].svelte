@@ -1,5 +1,5 @@
 <script context="module">
-  import { BASE_URL } from 'src/modules/constants';
+  import { BASE_URL } from '../../modules/constants';
 
   export async function load({ fetch, page }) {
     try {
@@ -21,7 +21,7 @@
 </script>
 
 <script>
-  import { MATCH_SUMMARY } from 'src/modules/constants';
+  import { MATCH_SUMMARY } from '../../modules/constants';
   import BoxScore from '../../components/BoxScore.svelte';
   export let match;
 </script>

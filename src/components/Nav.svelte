@@ -1,11 +1,17 @@
 <script>
   import { getStores } from '$app/stores';
   import { MENU, ROUTES, SITE_TITLE } from '../modules/constants';
+  import { isEmpty } from '../modules/helpers';
   const { page } = getStores();
+
+  export let match = {};
 
   let view = '';
   let menu = false;
   $: backdropClass = `nav-modal-backdrop${menu ? ' show' : ''}`;
+  $: shownRoutes = isEmpty(match)
+    ? ROUTES.filter((r) => !r.hideIfNoMatch)
+    : ROUTES.filter((r) => !r.hideIfMatchInProgress);
 
   page.subscribe(({ path }) => (view = path));
 
@@ -18,7 +24,7 @@
   <button class="btn menu-btn" on:click={toggleMenu}>{MENU}</button>
   <a href="/" tabindex="0"><h1>{SITE_TITLE}</h1></a>
   <nav class={menu ? 'show' : 'hide'}>
-    {#each ROUTES as { href, title }}
+    {#each shownRoutes as { href, title }}
       <a
         {href}
         {title}
