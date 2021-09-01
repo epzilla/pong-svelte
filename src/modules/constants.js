@@ -35,6 +35,7 @@ export const END_MATCH_CONFIRMATION_PROMPT =
   'Are you sure you want to end this match?';
 export const FINAL_TOGGLE_LABEL = 'Final?';
 export const LET_OTHERS_UPDATE = 'Let Others Update';
+export const MENU = 'Menu';
 export const NAME_ALREADY_EXISTS =
   'There is already a registered device by that name.';
 export const NEW_MATCH_PERMISSION_GRANTED =
@@ -47,6 +48,7 @@ export const SET_DEVICE_NAME_PROMPT = `
   Please take a moment to give this device a name, so that you can
   use it to update scores.
 `;
+export const SITE_TITLE = 'Pong Tracker';
 export const START_NEW_ONE = 'Start a new one!';
 export const UPDATE_SCORE = 'Update Score';
 

@@ -1,6 +1,6 @@
 <script>
   import { getStores } from '$app/stores';
-  import { ROUTES } from '../modules/constants';
+  import { MENU, ROUTES, SITE_TITLE } from '../modules/constants';
   const { page } = getStores();
 
   let view = '';
@@ -15,8 +15,8 @@
 </script>
 
 <header class="header">
-  <button class="btn menu-btn" on:click={toggleMenu}>Menu</button>
-  <a href="/" tabindex="0"><h1>Pong Tracker</h1></a>
+  <button class="btn menu-btn" on:click={toggleMenu}>{MENU}</button>
+  <a href="/" tabindex="0"><h1>{SITE_TITLE}</h1></a>
   <nav class={menu ? 'show' : 'hide'}>
     {#each ROUTES as { href, title }}
       <a
