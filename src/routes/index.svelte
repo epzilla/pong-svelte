@@ -7,18 +7,15 @@
       const [recentMatchesResult, currentMatchResult, playersResult] =
         await Promise.all([
           fetch(`${BASE_URL}matches/most-recent/5`),
-          fetch(`${BASE_URL}matches/current`),
-          fetch(`${BASE_URL}players`)
+          fetch(`${BASE_URL}matches/current`)
         ]);
 
       const recentMatches = await recentMatchesResult.json();
       const currentMatch = await currentMatchResult.json();
-      const players = await playersResult.json();
       return {
         props: {
           recentMatches,
-          currentMatch,
-          players
+          currentMatch
         }
       };
     } catch (err) {
@@ -45,7 +42,6 @@
   } from '../modules/constants';
   export let recentMatches = [];
   export let currentMatch;
-  export let players;
   let canUpdateScore = false;
   let matchStatus = currentMatch ? 'Match in Progress' : 'Latest Match';
   let device = LocalStorage.get('device');

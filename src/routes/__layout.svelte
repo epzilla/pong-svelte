@@ -1,6 +1,5 @@
 <script context="module">
   import { BASE_URL } from '../modules/constants';
-  import { isEmpty } from '../modules/helpers';
 
   export async function load({ fetch }) {
     try {
@@ -24,6 +23,7 @@
   import FixedAlerts from '../components/FixedAlerts.svelte';
   import Nav from '../components/Nav.svelte';
   import { currentMatch } from '../modules/stores';
+  import { isEmpty } from '../modules/helpers';
 
   export let match;
   let matchInProgress;
