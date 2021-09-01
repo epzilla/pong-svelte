@@ -34,6 +34,15 @@ const createWsConnection = () => {
 };
 
 const fireCallbacks = ({ type, data, originDeviceId }) => {
+  if (devMode) {
+    console.debug({
+      type,
+      data,
+      callbacks,
+      originDeviceId,
+      deviceId
+    });
+  }
   if (
     type &&
     data &&
