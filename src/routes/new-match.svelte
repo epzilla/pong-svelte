@@ -58,7 +58,7 @@
   export let players;
   let doubles = false;
   $: player1 = players?.length > 0 && players?.length <= 2 ? players[0] : null;
-  $: player2 = players?.length === 2 ? players[1] : null;
+  $: player2 = players?.length >= 2 ? players[1] : null;
   let partner1 = null;
   let partner2 = null;
   let isSelectingPlayer = 0;
