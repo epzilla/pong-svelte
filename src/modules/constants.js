@@ -35,6 +35,7 @@ export const END_MATCH_CONFIRMATION_PROMPT =
   'Are you sure you want to end this match?';
 export const FINAL_TOGGLE_LABEL = 'Final?';
 export const LET_OTHERS_UPDATE = 'Let Others Update';
+export const MATCH_SUMMARY = 'Match Summary';
 export const MENU = 'Menu';
 export const NAME_ALREADY_EXISTS =
   'There is already a registered device by that name.';

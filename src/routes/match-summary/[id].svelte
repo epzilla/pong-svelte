@@ -21,12 +21,13 @@
 </script>
 
 <script>
+  import { MATCH_SUMMARY } from 'src/modules/constants';
   import BoxScore from '../../components/BoxScore.svelte';
   export let match;
 </script>
 
 <div class="main match-summary">
-  <h2 class="align-center primary-text">Match Summary</h2>
+  <h2 class="align-center primary-text">{MATCH_SUMMARY}</h2>
   {#if match}
     <BoxScore jumbotron={true} {match} />
   {/if}
