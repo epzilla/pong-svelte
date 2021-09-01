@@ -35,6 +35,7 @@ export const AFTER_EACH_GAME = 'After each game';
 export const BEGIN = 'Begin';
 export const BEST_OF = 'Best of';
 export const CHANGE = 'Change';
+export const CLICK = 'Click';
 export const CONFIRM_END_MATCH = 'Confirm End Match';
 export const DEVICE_CANNOT_UPDATE_MATCH =
   'This device is not authorized to update this match. Please ask the person who started this match to grant you permission.';
@@ -87,6 +88,7 @@ export const SITE_TITLE = 'Pong Tracker';
 export const START_A_NEW_MATCH = 'Start a New Match';
 export const START_NEW_ONE = 'Start a new one!';
 export const SUBMIT = 'Submit';
+export const TAP = 'Tap';
 export const TO = 'to';
 export const UPDATE_SCORE = 'Update Score';
 export const UPDATE_SCORES = 'Update scores';
@@ -96,6 +98,11 @@ export const YES = 'Yes';
 
 // String interpolations
 export const ADDED_AS_PLAYER_PROMPT = (name) => `Added ${name} as a player.`;
+export const ALERT_MATCH_STARTED = (
+  alert,
+  clickOrTap
+) => `${alert.player1Fname} and ${alert.player2Fname} just started a match. ${clickOrTap}
+      here to view.`;
 export const FIRST_SERVE_PROMPT = (player) => `${player.fname} serves first!`;
 export const PLAYING_TO_AND_BEST_OF_PROMPT = (match) =>
   `Playing to ${match.playTo}, ${match.playAllGames ? 'total of' : 'best of'} ${

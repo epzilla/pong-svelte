@@ -2,7 +2,13 @@
   import { onMount } from 'svelte';
   import { fly } from 'svelte/transition';
   import { goto } from '$app/navigation';
-  import { DEVICE_TYPES, MATCH_STARTED } from '../modules/constants';
+  import {
+    ALERT_MATCH_STARTED,
+    CLICK,
+    DEVICE_TYPES,
+    MATCH_STARTED,
+    TAP
+  } from '../modules/constants';
   import { getBestGuessDevice } from '../modules/helpers';
 
   export let alert;
@@ -10,7 +16,7 @@
   export let dismiss;
   export let index;
 
-  let clickOrTap = 'Click';
+  let clickOrTap = CLICK;
 
   onMount(() => {
     let type = device && device.type ? device.type : getBestGuessDevice();
@@ -18,7 +24,7 @@
       type === DEVICE_TYPES.MOBILE_DEVICE ||
       type === DEVICE_TYPES.TABLET_DEVICE
     ) {
-      clickOrTap = 'Tap';
+      clickOrTap = TAP;
     }
   });
 
@@ -35,8 +41,7 @@
 >
   {#if alert.type === MATCH_STARTED}
     <span on:click={() => goToHomeScreen(dismiss)}
-      >{alert.player1Fname} and {alert.player2Fname} just started a match. {clickOrTap}
-      here to view.</span
+      >{ALERT_MATCH_STARTED(alert, clickOrTap)}</span
     >
   {:else}
     <span>{alert.msg}</span>
