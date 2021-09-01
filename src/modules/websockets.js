@@ -40,10 +40,10 @@ const WebSockets = {
           ws = new WebSocket(WS_BASE_URL);
           ws.onerror = (e) => console.error(e);
           ws.onopen = () =>
-            console.log(
+            console.debug(
               `WebSocket connection established for device ID: ${deviceId}`
             );
-          ws.onclose = () => console.log('WebSocket connection closed');
+          ws.onclose = () => console.debug('WebSocket connection closed');
           ws.onmessage = (m) => {
             if (m && m.data) {
               let json = JSON.parse(m.data);
@@ -62,7 +62,7 @@ const WebSockets = {
   },
 
   subscribe: (type, cb) => {
-    console.info(`Subscribing to: ${type}`);
+    console.debug(`Subscribing to: ${type}`);
     if (callbacks[type]) {
       callbacks[type].push(cb);
     } else {
@@ -72,7 +72,7 @@ const WebSockets = {
 
   unsubscribe: (type, cb) => {
     if (callbacks[type]) {
-      console.info(`Unsubscribing to: ${type}`);
+      console.debug(`Unsubscribing to: ${type}`);
       let i = callbacks[type].findIndex((fn) => fn === cb);
       if (i !== -1) {
         callbacks[type].splice(i, 1);

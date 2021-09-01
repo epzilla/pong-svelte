@@ -117,7 +117,6 @@
         pg[stats.player2.player.fname] = pg.avgPointsAgainst;
         return pg;
       });
-      console.log({ perGameData });
       largestMatchesValue = Math.max(
         stats.player1.matchesWon,
         stats.player2.matchesWon
@@ -131,16 +130,6 @@
         stats.player2.pointsFor
       );
       window.smoothScroll(resultHR, 250);
-      console.info({
-        stats,
-        matchesData,
-        gamesData,
-        pointsData,
-        perGameData,
-        largestMatchesValue,
-        largestGamesValue,
-        largestPointsValue
-      });
     }
   }
 </script>

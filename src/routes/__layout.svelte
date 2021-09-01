@@ -6,7 +6,6 @@
     try {
       const matchResult = await fetch(`${BASE_URL}matches/current`);
       const match = await matchResult.json();
-      console.log(`Match ID is: ${match?.id}`);
       return {
         props: {
           match
@@ -30,14 +29,12 @@
   let matchInProgress;
 
   $: {
-    console.log(`Match inside $ loop is: ${match?.id}`);
     if (!isEmpty(match)) {
       currentMatch.set(match);
       matchInProgress = match;
     }
   }
   currentMatch.subscribe((m) => {
-    console.log(`Match inside sub is: ${m?.id}`);
     matchInProgress = m;
   });
 </script>
