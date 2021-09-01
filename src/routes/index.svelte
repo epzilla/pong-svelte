@@ -35,12 +35,16 @@
   import BoxScore from '../components/BoxScore.svelte';
   import LiveScoreboard from '../components/LiveScoreboard.svelte';
   import {
+    ADDED_DEVICES_TO_MATCH,
+    CLICK,
     MATCH_STARTED,
     RECENT_MATCHES,
     START_A_NEW_MATCH,
+    TAP,
     UPDATE_SCORE
   } from '../modules/constants';
-  import { currentMatch } from '../modules/stores';
+  import { getBestGuessDevice } from '../modules/helpers';
+  import { addAlert, currentMatch } from '../modules/stores';
 
   export let recentMatches = [];
   export let matchInProgress;
@@ -50,24 +54,46 @@
   let device = LocalStorage.get('device');
   let devMode = LocalStorage.get('dev-mode');
   let deviceId = device?.id;
+  let clickOrTap = CLICK;
 
   function onMatchStartedElsewhere(m) {
     currentMatch.set(m);
     matchInProgress = m;
   }
 
+  function onDevicesAdded({ match, deviceIds }) {
+    if (!canUpdateScore && deviceIds.some((d) => d.id === deviceId)) {
+      canUpdateScore = true;
+      addAlert({
+        type: 'success',
+        msg: GRANTED_ACCESS_TO_UPDATE_SCORE(clickOrTap),
+        timeout: 10000
+      });
+    }
+  }
+
   onMount(async () => {
     if (deviceId) {
-      WebSockets.init(deviceId, !!devMode);
+      await WebSockets.init(deviceId, !!devMode);
       canUpdateScore = await Rest.get(`matches/can-update-score/${deviceId}`);
       WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
+      WebSockets.subscribe(ADDED_DEVICES_TO_MATCH, onDevicesAdded);
     } else {
       goto('/set-device');
+    }
+
+    let type = device?.type ? device.type : getBestGuessDevice();
+    if (
+      type === DEVICE_TYPES.MOBILE_DEVICE ||
+      type === DEVICE_TYPES.TABLET_DEVICE
+    ) {
+      clickOrTap = TAP;
     }
   });
 
   onDestroy(() => {
     WebSockets.unsubscribe(MATCH_STARTED, onMatchStartedElsewhere);
+    WebSockets.subscribe(ADDED_DEVICES_TO_MATCH, onDevicesAdded);
   });
 </script>
 

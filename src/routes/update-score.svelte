@@ -56,7 +56,12 @@
   import Expandable from '../components/Expandable.svelte';
   import Stepper from '../components/Stepper.svelte';
   import Toggle from '../components/Toggle.svelte';
-  import { getScoreHeaderLine, getTeamName, isEmpty } from '../modules/helpers';
+  import {
+    generateSharedDevicesAlert,
+    getScoreHeaderLine,
+    getTeamName,
+    isEmpty
+  } from '../modules/helpers';
   import { addAlert, currentMatch } from '../modules/stores';
 
   const device = LocalStorage.get('device');
@@ -68,30 +73,23 @@
   let showConfirmEndMatch = false;
   let notAuthorized = false;
 
-  function selectDevices(devices) {
+  async function selectDevices(devices) {
     if (devices?.length > 0) {
       showChooseOtherDevice = false;
-      let packet = Object.assign(
-        {
-          deviceId
-        },
-        state
-      );
-      packet.devices = devices;
-      Rest.post('matches/add-devices', packet)
-        .then(() => {
-          let msg = 'This match can now be updated by ';
-          if (devices.length > 1) {
-            msg += `${devices
-              .slice(0, -1)
-              .map((d) => d.name)
-              .join(', ')}, and ${devices[devices.length - 1].name}.`;
-          } else {
-            msg += `${devices[0].name}.`;
-          }
-          addAlert({ type: 'info', msg });
-        })
-        .catch((e) => addAlert({ type: 'error', msg: e }));
+      try {
+        await Rest.post('matches/add-devices', {
+          deviceId,
+          match,
+          devices
+        });
+        addAlert({
+          type: 'info',
+          msg: generateSharedDevicesAlert(devices),
+          timeout: 10000
+        });
+      } catch (e) {
+        addAlert({ type: 'error', msg: e });
+      }
     }
   }
 

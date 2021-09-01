@@ -113,9 +113,13 @@ export const ALERT_MATCH_STARTED = (
   clickOrTap
 ) => `${alert.team1} and ${alert.team2} just started a match. ${clickOrTap}
       here to view.`;
+export const ALERT_MATCH_CAN_BE_UPDATED_BY_OTHERS = (devices) =>
+  `This match can now be updated by ${devices}.`;
 export const FIRST_SERVE_PROMPT = (player) => `${player.fname} serves first!`;
 export const GAMES_PLAYED_TO_AMOUNT = (amount) =>
   `Games played to ${amount} points.`;
+export const GRANTED_ACCESS_TO_UPDATE_SCORE = (clickOrTap) =>
+  `Your device has been granted access to update the score of the current match. ${clickOrTap} here to change the score.`;
 export const PLAYING_ALL_OR_BEST_OF = (match) =>
   `${match.playAllGames ? 'Playing all' : 'Best of'} ${match.bestOf} games.`;
 export const PLAYING_TO_AND_BEST_OF_PROMPT = (match) =>

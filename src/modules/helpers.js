@@ -3,7 +3,11 @@ import isThisYear from 'date-fns/isThisYear/index.js';
 import differenceInDays from 'date-fns/differenceInDays/index.js';
 import formatDistance from 'date-fns/formatDistance/index.js';
 import format from 'date-fns/format/index.js';
-import { ALERT_MATCH_STARTED, DEVICE_TYPES } from './constants';
+import {
+  ALERT_MATCH_CAN_BE_UPDATED_BY_OTHERS,
+  ALERT_MATCH_STARTED,
+  DEVICE_TYPES
+} from './constants';
 
 export const lightenOrDarken = (col, amt) => {
   let usePound = false;
@@ -269,4 +273,16 @@ export const generateMatchStartAlert = (match, clickOrTap) => {
     },
     clickOrTap
   );
+};
+
+export const generateSharedDevicesAlert = (devices) => {
+  let deviceList = devices[0].name;
+  if (devices.length > 1) {
+    const formatter = new Intl.ListFormat(navigator.language, {
+      style: 'long',
+      type: 'conjunction'
+    });
+    deviceList = formatter.format(devices.map((d) => d.name));
+  }
+  return ALERT_MATCH_CAN_BE_UPDATED_BY_OTHERS(deviceList);
 };
