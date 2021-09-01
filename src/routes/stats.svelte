@@ -12,7 +12,6 @@
       })) || [];
     return {
       props: {
-        players,
         playerOptions
       }
     };
@@ -40,7 +39,6 @@
   import Toggle from '../components/Toggle.svelte';
   import BoxScore from '../components/BoxScore.svelte';
   import HeadingWithExtenderLines from '../components/HeadingWithExtenderLines.svelte';
-  export let players;
   export let playerOptions;
 
   const dateFormat = 'yyyy-MM-dd';
@@ -48,28 +46,13 @@
 
   let stats;
   let perGameData;
-  let largestMatchesValue = 0;
-  let largestGamesValue = 0;
-  let largestPointsValue = 0;
   let useDates = false;
   let startDate = format(new Date(), dateFormat);
   let endDate = format(new Date(), dateFormat);
-  let activeMatchesIndex = -1;
-  let activeGamesIndex = -1;
-  let activePointsIndex = -1;
 
   let player1 = playerOptions?.length > 0 ? playerOptions[0] : null;
   let player2 = playerOptions?.length > 1 ? playerOptions[1] : null;
   $: submitEnabled = !!(player1 && player2);
-
-  let data = {
-    labels: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],
-    datasets: [
-      {
-        values: [10, 12, 3, 9, 8, 15, 9]
-      }
-    ]
-  };
 
   function onPlayer1Select({ detail }) {
     if (!detail?.disabled) {
@@ -117,18 +100,7 @@
         pg[stats.player2.player.fname] = pg.avgPointsAgainst;
         return pg;
       });
-      largestMatchesValue = Math.max(
-        stats.player1.matchesWon,
-        stats.player2.matchesWon
-      );
-      largestGamesValue = Math.max(
-        stats.player1.gamesWon,
-        stats.player2.gamesWon
-      );
-      largestPointsValue = Math.max(
-        stats.player1.pointsFor,
-        stats.player2.pointsFor
-      );
+
       window.smoothScroll(resultHR, 250);
     }
   }
