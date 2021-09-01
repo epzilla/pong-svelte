@@ -3,7 +3,7 @@ import isThisYear from 'date-fns/isThisYear/index.js';
 import differenceInDays from 'date-fns/differenceInDays/index.js';
 import formatDistance from 'date-fns/formatDistance/index.js';
 import format from 'date-fns/format/index.js';
-import { DEVICE_TYPES } from './constants';
+import { ALERT_MATCH_STARTED, DEVICE_TYPES } from './constants';
 
 export const lightenOrDarken = (col, amt) => {
   let usePound = false;
@@ -58,6 +58,7 @@ export const getFormattedMatchDate = (game) => {
 };
 
 export const getMatchTimeAgo = (match) => {
+  if (!match) return '';
   return formatDistance(parseISO(match.startTime), new Date(), {
     includeSeconds: true,
     addSuffix: true
@@ -65,6 +66,7 @@ export const getMatchTimeAgo = (match) => {
 };
 
 export const getTeamName = (match, teamNum) => {
+  if (!match) return '';
   if (match.doubles && teamNum === 1) {
     return `${match.player1.lname} / ${match.partner1.lname}`;
   } else if (match.doubles && teamNum === 2) {
@@ -199,10 +201,10 @@ export const calculateExpectedPointsPerMatch = (match) => {
 };
 
 export const shouldFlashScore = (scoreFlash, game, i, teamNum) => {
-  if (scoreFlash.game === i) {
-    if (teamNum === 1 && game.player1Id === scoreFlash.scorer) {
+  if (scoreFlash?.game === i) {
+    if (teamNum === 1 && game?.player1Id === scoreFlash?.scorer) {
       return true;
-    } else if (teamNum === 2 && game.player2Id === scoreFlash.scorer) {
+    } else if (teamNum === 2 && game?.player2Id === scoreFlash?.scorer) {
       return true;
     }
   }
@@ -257,4 +259,14 @@ export const debounce = function (func, wait, immediate) {
       func.apply(context, args);
     }
   };
+};
+
+export const generateMatchStartAlert = (match, clickOrTap) => {
+  return ALERT_MATCH_STARTED(
+    {
+      team1: getTeamName(match, 1),
+      team2: getTeamName(match, 2)
+    },
+    clickOrTap
+  );
 };

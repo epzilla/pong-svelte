@@ -8,7 +8,7 @@ export const addAlert = (alert) => {
     const id = generateGuid();
     setTimeout(() => {
       alerts.update((al) => al.filter((a) => a.id !== id));
-    }, 5000);
+    }, alert.timeout || 5000);
     return [...n, { ...alert, id }];
   });
 };

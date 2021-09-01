@@ -4,18 +4,17 @@
 
   export async function load({ fetch }) {
     try {
-      const [recentMatchesResult, currentMatchResult, playersResult] =
-        await Promise.all([
-          fetch(`${BASE_URL}matches/most-recent/5`),
-          fetch(`${BASE_URL}matches/current`)
-        ]);
+      const [recentMatchesResult, matchResult] = await Promise.all([
+        fetch(`${BASE_URL}matches/most-recent/5`),
+        fetch(`${BASE_URL}matches/current`)
+      ]);
 
       const recentMatches = await recentMatchesResult.json();
-      const currentMatch = await currentMatchResult.json();
+      const matchInProgress = await matchResult.json();
       return {
         props: {
           recentMatches,
-          currentMatch
+          matchInProgress
         }
       };
     } catch (err) {
@@ -28,7 +27,7 @@
 </script>
 
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
   import LocalStorage from '../modules/localStorage';
   import WebSockets from '../modules/websockets';
@@ -36,33 +35,45 @@
   import BoxScore from '../components/BoxScore.svelte';
   import LiveScoreboard from '../components/LiveScoreboard.svelte';
   import {
+    MATCH_STARTED,
     RECENT_MATCHES,
     START_A_NEW_MATCH,
     UPDATE_SCORE
   } from '../modules/constants';
+  import { currentMatch } from '../modules/stores';
+
   export let recentMatches = [];
-  export let currentMatch;
+  export let matchInProgress;
+
   let canUpdateScore = false;
-  let matchStatus = currentMatch ? 'Match in Progress' : 'Latest Match';
+  $: matchStatus = matchInProgress ? 'Match in Progress' : 'Latest Match';
   let device = LocalStorage.get('device');
   let devMode = LocalStorage.get('dev-mode');
   let deviceId = device?.id;
+
+  function onMatchStartedElsewhere(m) {
+    currentMatch.set(m);
+    matchInProgress = m;
+  }
+
   onMount(async () => {
     if (deviceId) {
       WebSockets.init(deviceId, !!devMode);
       canUpdateScore = await Rest.get(`matches/can-update-score/${deviceId}`);
+      WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
     } else {
       goto('/set-device');
     }
   });
+
+  onDestroy(() => {
+    WebSockets.unsubscribe(MATCH_STARTED, onMatchStartedElsewhere);
+  });
 </script>
 
-{#if !isEmpty(currentMatch)}
+{#if !isEmpty(matchInProgress)}
   <h2 class="align-center primary-text">{matchStatus}</h2>
-  <LiveScoreboard match={currentMatch} />
-{/if}
-
-{#if !isEmpty(currentMatch)}
+  <LiveScoreboard match={matchInProgress} />
   {#if canUpdateScore}
     <a href="/update-score" class="btn big success update-score"
       >{UPDATE_SCORE}</a
@@ -80,9 +91,9 @@
   <hr />
   <h3 class="align-center primary-text">{RECENT_MATCHES}</h3>
   <ul>
-    {#each recentMatches as match}
-      {#if !currentMatch || currentMatch.id !== match.id}
-        <BoxScore {match} />
+    {#each recentMatches as m}
+      {#if !m || m.id !== matchInProgress.id}
+        <BoxScore match={m} />
       {/if}
     {/each}
   </ul>

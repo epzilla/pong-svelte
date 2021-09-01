@@ -26,6 +26,7 @@
     GAMES_WON,
     HEAD_TO_HEAD_LABEL,
     MATCH_RESULTS,
+    MATCH_STARTED,
     MATCHES_WON,
     POINTS_WON,
     SUBMIT,
@@ -36,9 +37,12 @@
   import Chart from 'svelte-frappe-charts';
   import Select from 'svelte-select';
   import Rest from '../modules/rest';
+  import WebSockets from '../modules/websockets';
   import Toggle from '../components/Toggle.svelte';
   import BoxScore from '../components/BoxScore.svelte';
   import HeadingWithExtenderLines from '../components/HeadingWithExtenderLines.svelte';
+  import { onMount, onDestroy } from 'svelte';
+  import { addAlert } from '../modules/stores';
   export let playerOptions;
 
   const dateFormat = 'yyyy-MM-dd';
@@ -104,6 +108,24 @@
       window.smoothScroll(resultHR, 250);
     }
   }
+
+  function onMatchStartedElsewhere(match) {
+    addAlert({
+      type: MATCH_STARTED,
+      msg: match,
+      timeout: 15000,
+      clickable: true
+    });
+  }
+
+  onMount(async () => {
+    await WebSockets.init();
+    WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
+  });
+
+  onDestroy(() => {
+    WebSockets.unsubscribe(MATCH_STARTED, onMatchStartedElsewhere);
+  });
 </script>
 
 <div style="height: 100%; width: 100%;">

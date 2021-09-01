@@ -111,7 +111,7 @@ export const ADDED_AS_PLAYER_PROMPT = (name) => `Added ${name} as a player.`;
 export const ALERT_MATCH_STARTED = (
   alert,
   clickOrTap
-) => `${alert.player1Fname} and ${alert.player2Fname} just started a match. ${clickOrTap}
+) => `${alert.team1} and ${alert.team2} just started a match. ${clickOrTap}
       here to view.`;
 export const FIRST_SERVE_PROMPT = (player) => `${player.fname} serves first!`;
 export const GAMES_PLAYED_TO_AMOUNT = (amount) =>

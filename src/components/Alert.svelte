@@ -3,13 +3,15 @@
   import { fly } from 'svelte/transition';
   import { goto } from '$app/navigation';
   import {
-    ALERT_MATCH_STARTED,
     CLICK,
     DEVICE_TYPES,
     MATCH_STARTED,
     TAP
   } from '../modules/constants';
-  import { getBestGuessDevice } from '../modules/helpers';
+  import {
+    generateMatchStartAlert,
+    getBestGuessDevice
+  } from '../modules/helpers';
 
   export let alert;
   export let device;
@@ -27,26 +29,32 @@
       clickOrTap = TAP;
     }
   });
-
-  function goToHomeScreen(dismiss) {
-    goto('/');
-    dismiss && dismiss();
-  }
 </script>
 
 <div
   in:fly={{ y: 200, duration: 200 }}
   out:fly={{ y: 200, duration: 500 }}
-  class={`alert alert-${alert.type}`}
+  class={`alert alert-${alert.type}${alert.clickable ? ' clickable' : ''}`}
+  on:click={() => {
+    if (alert.type === MATCH_STARTED) {
+      goto('/');
+      dismiss(index);
+    }
+  }}
 >
   {#if alert.type === MATCH_STARTED}
-    <span on:click={() => goToHomeScreen(dismiss)}
-      >{ALERT_MATCH_STARTED(alert, clickOrTap)}</span
-    >
+    <span>{generateMatchStartAlert(alert.msg, clickOrTap)}</span>
   {:else}
     <span>{alert.msg}</span>
   {/if}
-  <button class="close-button" on:click={() => dismiss(index)}>&times;</button>
+  <button
+    class="close-button"
+    on:click={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dismiss(index);
+    }}>&times;</button
+  >
 </div>
 
 <style lang="scss">
@@ -78,6 +86,10 @@
       background-color: #d4edda;
       border-color: #c3e6cb;
       color: #155724;
+    }
+
+    &.clickable {
+      cursor: pointer;
     }
 
     .close-button {

@@ -62,9 +62,9 @@
   }
 
   function getClassesForScoreBox(match, i, scoreFlash, teamNum) {
-    let g = match.games[i];
+    let g = match?.games[i];
     let classes = 'score-number-box';
-    if (g.gameFinished) {
+    if (g?.gameFinished) {
       if (
         (g.score1 > g.score2 && teamNum === 1) ||
         (g.score2 > g.score1 && teamNum === 2)
@@ -83,7 +83,7 @@
   }
 
   function getScoreToDisplay(match, game, teamNum) {
-    if (match.updateEveryPoint || game.gameFinished) {
+    if (match?.updateEveryPoint || game?.gameFinished) {
       return game[`score${teamNum}`];
     }
 
@@ -91,10 +91,11 @@
   }
 
   function getHourGlassIcon(match, currentGame) {
+    if (!match) return '';
     let game = match.games[currentGame];
     let previousPoints =
       match.games
-        .filter((g) => g.gameFinished)
+        .filter((g) => g?.gameFinished)
         .reduce((sum, current) => sum + (current.score1 + current.score2), 0) ||
       0;
     let totalPoints = previousPoints + (game ? game.score1 + game.score2 : 0);
@@ -111,82 +112,86 @@
 </script>
 
 <div class={classes}>
-  {#if match.finished}
-    <h4 class="date-time-header">{getFormattedMatchDate(match)}</h4>
-  {/if}
-  <div class="header-row flex">
-    <span class="player-name" />
-    {#each headerRowNums as i}
-      {#if match.games.length >= i + 1}
-        <span class={getClassesForGameBox(match, i, gameFlash)}>{i + 1}</span>
-      {:else}
-        <span class={`score-number-box future`}>{i + 1}</span>
-      {/if}
-    {/each}
-  </div>
-  <div class="score-row flex">
-    <span
-      class={`player-name ${
-        stats?.winner && stats.winner === match.player1Id ? 'winner' : ''
-      }`}>{getTeamName(match, 1)}</span
-    >
-    {#each headerRowNums as i}
-      {#if match.games.length >= i + 1}
-        <span class={getClassesForScoreBox(match, i, scoreFlash, 1)}
-          >{getScoreToDisplay(match, match.games[i], 1)}</span
-        >
-      {:else}
-        <span class={`score-number-box future`}>0</span>
-      {/if}
-    {/each}
-  </div>
-  <div class="score-row flex">
-    <span
-      class={`player-name ${
-        stats?.winner && stats.winner === match.player2Id ? 'winner' : ''
-      }`}>{getTeamName(match, 2)}</span
-    >
-    {#each headerRowNums as i}
-      {#if match.games.length >= i + 1}
-        <span class={getClassesForScoreBox(match, i, scoreFlash, 2)}
-          >{getScoreToDisplay(match, match.games[i], 2)}</span
-        >
-      {:else}
-        <span class={`score-number-box future`}>0</span>
-      {/if}
-    {/each}
-  </div>
-  <div class="score-row stats-row flex-center">
-    {#if match?.finished}
-      <div class="flex-col flex-center">
-        <p class="final flex-center">{FINAL}</p>
-        <p class="font-small center">{stats?.resultString}</p>
-        <p class="font-small center">{stats?.pointsWonString}</p>
-      </div>
-    {:else}
-      <p class="flex-col" />
-      <p class="match-info-block">
-        <i class="fa fa-clock-o" />
-        <span class="match-info"
-          >{STARTED_TIME_AGO(getMatchTimeAgo(match))}</span
-        >
-      </p>
-      <p class="match-info-block">
-        <i class="fa fa-bullseye" />
-        <span class="match-info">{GAMES_PLAYED_TO_AMOUNT(match.playTo)}</span>
-      </p>
-      <p class="match-info-block">
-        <i class={`fa fa-hourglass-${getHourGlassIcon(match, currentGame)}`} />
-        <span class="match-info">{PLAYING_ALL_OR_BEST_OF(match)}</span>
-      </p>
-      {#if match?.updateEveryPoint}
-        <p class="match-info-block align-top">
-          <i class="fa fa-asterisk" />
-          <span class="match-info">{LIVE_SCORING_UPDATES_DISABLED}</span>
-        </p>
-      {/if}
+  {#if match}
+    {#if match.finished}
+      <h4 class="date-time-header">{getFormattedMatchDate(match)}</h4>
     {/if}
-  </div>
+    <div class="header-row flex">
+      <span class="player-name" />
+      {#each headerRowNums as i}
+        {#if match.games.length >= i + 1}
+          <span class={getClassesForGameBox(match, i, gameFlash)}>{i + 1}</span>
+        {:else}
+          <span class={`score-number-box future`}>{i + 1}</span>
+        {/if}
+      {/each}
+    </div>
+    <div class="score-row flex">
+      <span
+        class={`player-name ${
+          stats?.winner && stats.winner === match.player1Id ? 'winner' : ''
+        }`}>{getTeamName(match, 1)}</span
+      >
+      {#each headerRowNums as i}
+        {#if match.games.length >= i + 1}
+          <span class={getClassesForScoreBox(match, i, scoreFlash, 1)}
+            >{getScoreToDisplay(match, match.games[i], 1)}</span
+          >
+        {:else}
+          <span class={`score-number-box future`}>0</span>
+        {/if}
+      {/each}
+    </div>
+    <div class="score-row flex">
+      <span
+        class={`player-name ${
+          stats?.winner && stats.winner === match.player2Id ? 'winner' : ''
+        }`}>{getTeamName(match, 2)}</span
+      >
+      {#each headerRowNums as i}
+        {#if match.games.length >= i + 1}
+          <span class={getClassesForScoreBox(match, i, scoreFlash, 2)}
+            >{getScoreToDisplay(match, match.games[i], 2)}</span
+          >
+        {:else}
+          <span class={`score-number-box future`}>0</span>
+        {/if}
+      {/each}
+    </div>
+    <div class="score-row stats-row flex-center">
+      {#if match.finished}
+        <div class="flex-col flex-center">
+          <p class="final flex-center">{FINAL}</p>
+          <p class="font-small center">{stats?.resultString}</p>
+          <p class="font-small center">{stats?.pointsWonString}</p>
+        </div>
+      {:else}
+        <p class="flex-col" />
+        <p class="match-info-block">
+          <i class="fa fa-clock-o" />
+          <span class="match-info"
+            >{STARTED_TIME_AGO(getMatchTimeAgo(match))}</span
+          >
+        </p>
+        <p class="match-info-block">
+          <i class="fa fa-bullseye" />
+          <span class="match-info">{GAMES_PLAYED_TO_AMOUNT(match.playTo)}</span>
+        </p>
+        <p class="match-info-block">
+          <i
+            class={`fa fa-hourglass-${getHourGlassIcon(match, currentGame)}`}
+          />
+          <span class="match-info">{PLAYING_ALL_OR_BEST_OF(match)}</span>
+        </p>
+        {#if match.updateEveryPoint}
+          <p class="match-info-block align-top">
+            <i class="fa fa-asterisk" />
+            <span class="match-info">{LIVE_SCORING_UPDATES_DISABLED}</span>
+          </p>
+        {/if}
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">

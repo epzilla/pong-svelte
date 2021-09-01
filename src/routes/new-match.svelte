@@ -219,11 +219,8 @@
     }, 500);
   }
 
-  function closeCoinFlip() {
-    showCoinToss = false;
-  }
-
-  onMount(() => {
+  onMount(async () => {
+    await WebSockets.init();
     WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
     let cachedState = LocalStorage.get('start-match-state');
     player1 = cachedState?.player1 || player1;
