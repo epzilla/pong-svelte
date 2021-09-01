@@ -54,6 +54,7 @@
   import PlayerSelectBlock from '../components/PlayerSelectBlock.svelte';
   import SelectPlayerModal from '../components/SelectPlayerModal.svelte';
   import { currentMatch } from '../modules/stores';
+  import AddPlayerModal from '../components/AddPlayerModal.svelte';
 
   export let players;
   let doubles = false;
@@ -62,6 +63,7 @@
   let partner1 = null;
   let partner2 = null;
   let isSelectingPlayer = 0;
+  let isAddingNewPlayer = 0;
   let playTo = 21;
   let selectedPlayToOption = 21;
   let winByTwo = true;
@@ -181,21 +183,19 @@
         partner2
       });
     }
-    goto(`/add-new-player/new-match/${num}`);
+    isAddingNewPlayer = isSelectingPlayer;
   }
 
   function onCoinFlipAnimationEnd(e) {
     if (e.animationName.indexOf('coin-flip') !== -1) {
       document.removeEventListener('animationend', onCoinFlipAnimationEnd);
+      flipping = false;
+      flippingToP2 = false;
       if (p2winsToss) {
         firstServe = player2;
-        flipping = false;
-        flippingToP2 = false;
         showCoinReverse = true;
       } else {
         firstServe = player1;
-        flipping = false;
-        flippingToP2 = false;
         showCoinReverse = false;
       }
     }

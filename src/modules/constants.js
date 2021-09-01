@@ -29,6 +29,8 @@ export const MATCH_STARTED = 'match-started';
 export const SCORE_UPDATE = 'score-update';
 
 // Strings
+export const ADD = 'Add';
+export const ADD_NEW_PLAYER = 'Add New Player';
 export const AFTER_EACH_GAME = 'After each game';
 export const BEGIN = 'Begin';
 export const BEST_OF = 'Best of';
@@ -37,6 +39,8 @@ export const CONFIRM_END_MATCH = 'Confirm End Match';
 export const DEVICE_CANNOT_UPDATE_MATCH =
   'This device is not authorized to update this match. Please ask the person who started this match to grant you permission.';
 export const DEVICE_NAME = 'Device Name';
+export const DEVICE_NAME_ALREADY_EXISTS =
+  'There is already a registered device by that name.';
 export const DEVICE_TYPE = 'Device Type';
 export const DOUBLES = 'Doubles';
 export const END_MATCH = 'End Match';
@@ -58,8 +62,7 @@ export const MATCH_RESULTS = 'Match Results';
 export const MATCH_SUMMARY = 'Match Summary';
 export const MATCHES_WON = 'Matches Won';
 export const MENU = 'Menu';
-export const NAME_ALREADY_EXISTS =
-  'There is already a registered device by that name.';
+export const NAME = 'Name';
 export const NEW_MATCH_PERMISSION_GRANTED =
   'You have been granted permission to update a match!';
 export const NO = 'No';
@@ -69,6 +72,8 @@ export const NO_NAME_ENTERED = 'Please enter a name.';
 export const OTHER = 'Other';
 export const PLAY_ALL_GAMES = 'Play all games, even if match clinched?';
 export const PLAY_TO = 'Play to';
+export const PLAYER_NAME_ALREADY_EXISTS =
+  'There is already a player registered with that name.';
 export const POINT_BY_POINT = 'Point-by-point';
 export const POINTS_WON = 'Points Won';
 export const RECENT_MATCHES = 'Recent Matches';
@@ -90,8 +95,10 @@ export const WELCOME_EXCLAM = 'Welcome!';
 export const YES = 'Yes';
 
 // String interpolations
+export const ADDED_AS_PLAYER_PROMPT = (name) => `Added ${name} as a player.`;
 export const FIRST_SERVE_PROMPT = (player) => `${player.fname} serves first!`;
 export const PLAYING_TO_AND_BEST_OF_PROMPT = (match) =>
   `Playing to ${match.playTo}, ${match.playAllGames ? 'total of' : 'best of'} ${
     match.bestOf
   } games.`;
+export const SELECT_PLAYER_NUM = (num) => `Select Player ${num}`;

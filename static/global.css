@@ -497,6 +497,9 @@ hr {
   text-decoration: none;
   white-space: normal;
 }
+.btn[disabled] {
+  opacity: 0.5;
+}
 @media screen and (min-width: 400px) {
   .btn {
     max-width: 50vw;
@@ -532,7 +535,9 @@ hr {
 .btn .fa {
   margin-right: 0.5rem;
 }
-
+.alert-error {
+  color: #c90a0a;
+}
 @media screen and (min-width: 600px) {
   .row-if-large {
     flex-direction: row;

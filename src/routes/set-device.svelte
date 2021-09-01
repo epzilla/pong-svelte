@@ -4,7 +4,7 @@
   import {
     DEVICE_NAME,
     DEVICE_TYPE,
-    NAME_ALREADY_EXISTS,
+    DEVICE_NAME_ALREADY_EXISTS,
     NO_NAME_ENTERED,
     SET_DEVICE_NAME_PROMPT,
     WELCOME_EXCLAM
@@ -51,7 +51,7 @@
         (d) => d.name.toLowerCase() === name.toLowerCase()
       );
       if (existingDevice) {
-        return reject(NAME_ALREADY_EXISTS);
+        return reject(DEVICE_NAME_ALREADY_EXISTS);
       }
 
       return resolve();
