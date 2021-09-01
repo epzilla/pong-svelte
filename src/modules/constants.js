@@ -34,8 +34,15 @@ export const END_MATCH_NEGATIVE = 'Oops! No.';
 export const END_MATCH_CONFIRMATION_PROMPT =
   'Are you sure you want to end this match?';
 export const FINAL_TOGGLE_LABEL = 'Final?';
+export const FILTER_BY_DATE = 'Filter by date';
+export const FROM = 'from';
+export const GAME_BY_GAME_AVERAGES = 'Game-by-game Averages';
+export const GAMES_WON = 'Games Won';
+export const HEAD_TO_HEAD_LABEL = 'Head-to-Head Stats for:';
 export const LET_OTHERS_UPDATE = 'Let Others Update';
+export const MATCH_RESULTS = 'Match Results';
 export const MATCH_SUMMARY = 'Match Summary';
+export const MATCHES_WON = 'Matches Won';
 export const MENU = 'Menu';
 export const NAME_ALREADY_EXISTS =
   'There is already a registered device by that name.';
@@ -44,6 +51,7 @@ export const NEW_MATCH_PERMISSION_GRANTED =
 export const NO_DEVICES_SELECTED_ERROR = 'No devices selected.';
 export const NO_MATCH_IN_PROGRESS = 'There is no match in progress right now.';
 export const NO_NAME_ENTERED = 'Please enter a name.';
+export const POINTS_WON = 'Points Won';
 export const SET_DEVICE_NAME_PROMPT = `
   It doesn't look like you've used Pong Tracker on this device before.
   Please take a moment to give this device a name, so that you can
@@ -51,6 +59,8 @@ export const SET_DEVICE_NAME_PROMPT = `
 `;
 export const SITE_TITLE = 'Pong Tracker';
 export const START_NEW_ONE = 'Start a new one!';
+export const SUBMIT = 'Submit';
+export const TO = 'to';
 export const UPDATE_SCORE = 'Update Score';
 
 // String interpolations

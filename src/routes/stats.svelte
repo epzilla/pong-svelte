@@ -20,6 +20,18 @@
 </script>
 
 <script>
+  import {
+    FILTER_BY_DATE,
+    FROM,
+    GAME_BY_GAME_AVERAGES,
+    GAMES_WON,
+    HEAD_TO_HEAD_LABEL,
+    MATCH_RESULTS,
+    MATCHES_WON,
+    POINTS_WON,
+    SUBMIT,
+    TO
+  } from '../modules/constants';
   import format from 'date-fns/format/index.js';
   import isAfter from 'date-fns/isAfter';
   import Chart from 'svelte-frappe-charts';
@@ -134,7 +146,7 @@
 </script>
 
 <div style="height: 100%; width: 100%;">
-  <h2>Head-to-Head Stats for:</h2>
+  <h2>{HEAD_TO_HEAD_LABEL}</h2>
   <div class="form-container">
     <div class="players-row">
       <div class="select-container">
@@ -155,13 +167,13 @@
     </div>
 
     <div class="toggle-wrap">
-      <label>Filter by date</label>
+      <label>{FILTER_BY_DATE}</label>
       <Toggle onOff={useDates} toggled={toggleUseDates} id="use-dates-toggle" />
     </div>
     {#if useDates}
       <div class="dates-wrapper">
         <div class="date-input-wrapper">
-          <label>From</label>
+          <label>{FROM}</label>
           <input
             id="date1"
             type="date"
@@ -170,7 +182,7 @@
           />
         </div>
         <div class="date-input-wrapper">
-          <label>To</label>
+          <label>{TO}</label>
           <input
             id="date2"
             type="date"
@@ -181,14 +193,14 @@
       </div>
     {/if}
     <button class="btn primary" on:click={submit} disabled={!submitEnabled}>
-      Submit
+      {SUBMIT}
     </button>
   </div>
   <hr class="result-hr" bind:this={resultHR} />
   {#if stats}
     <div class="charts-container">
       <div class="chart-container">
-        <h3 class="chart-header no-top-margin">Matches Won</h3>
+        <h3 class="chart-header no-top-margin">{MATCHES_WON}</h3>
         <div class="pie-container">
           <Chart
             data={{
@@ -212,7 +224,7 @@
         </div>
       </div>
       <div class="chart-container">
-        <h3 class="chart-header">Games Won</h3>
+        <h3 class="chart-header">{GAMES_WON}</h3>
         <div class="pie-container">
           <Chart
             data={{
@@ -231,7 +243,7 @@
         </div>
       </div>
       <div class="chart-container">
-        <h3 class="chart-header">Points Won</h3>
+        <h3 class="chart-header">{POINTS_WON}</h3>
         <div class="pie-container">
           <Chart
             data={{
@@ -250,15 +262,8 @@
         </div>
       </div>
       <div class="chart-container full-width">
-        <h3 class="chart-header">Game-by-game Averages</h3>
+        <h3 class="chart-header">{GAME_BY_GAME_AVERAGES}</h3>
         <div class="pie-container line-chart-container">
-          <!-- <PerGameLineChart
-                  data={perGameData}
-                  player1={player1}
-                  player2={player2}
-                  width={lineChartWidth}
-                  height={lineChartHeight}
-                /> -->
           <Chart
             data={{
               labels: perGameData.map((pg, i) => `Game ${i + 1}`),
@@ -282,7 +287,7 @@
       </div>
       <hr class="result-hr" />
       <div class="results-container">
-        <h3 class="chart-header">Match Results</h3>
+        <h3 class="chart-header">{MATCH_RESULTS}</h3>
         {#each stats.matches as m}
           <BoxScore match={m} />
         {/each}
