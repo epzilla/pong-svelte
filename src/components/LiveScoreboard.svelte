@@ -10,25 +10,12 @@
   import BoxScore from './BoxScore.svelte';
 
   export let match;
-  let matchFlash = false;
-  let scoreFlash = false;
-  let scoreFlashTimeout;
-  let gameFlashTimeout;
-  let matchFlashTimeout;
 
   const onScoreUpdate = ({ game, scorer }) => {
     let i = match?.games.findIndex((g) => g.id === game.id);
     if (i !== -1) {
       match.games[i] = game;
-      if (scoreFlashTimeout) {
-        clearTimeout(scoreFlashTimeout);
-      }
-
-      scoreFlash = { game: i, scorer: scorer };
-      scoreFlashTimeout = setTimeout(() => {
-        scoreFlashTimeout = null;
-        scoreFlash = null;
-      }, 5000);
+      match = match;
     }
   };
 
@@ -36,6 +23,7 @@
     let i = match?.games.findIndex((g) => g.id === game.id);
     if (i === -1) {
       match.games.push(game);
+      match = match;
     }
   };
 
@@ -43,20 +31,12 @@
     let i = match?.games.findIndex((g) => g.id === game.id);
     if (i !== -1) {
       match.games[i] = game;
-      gameFlash = i;
-      scoreFlash = null;
-      gameFlashTimeout = setTimeout(() => {
-        gameFlash = null;
-      }, 5000);
+      match = match;
     }
   };
 
   const onMatchFinish = (finishedMatch) => {
     match = finishedMatch;
-    matchFlash = true;
-    matchFlashTimeout = setTimeout(() => {
-      matchFlash = false;
-    }, 5000);
   };
 
   onMount(() => {

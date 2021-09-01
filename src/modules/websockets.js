@@ -6,6 +6,33 @@ let deviceId = null;
 let initialized = false;
 let devMode = false;
 
+const createWsConnection = () => {
+  ws = new WebSocket(WS_BASE_URL);
+  ws.onerror = (e) => console.error(e);
+  ws.onopen = () =>
+    console.debug(
+      `WebSocket connection established for device ID: ${deviceId}`
+    );
+  ws.onclose = () => {
+    console.debug('WebSocket connection closed. Attempting to re-connect...');
+    createWsConnection();
+  };
+  ws.onmessage = (m) => {
+    if (devMode && m) {
+      console.debug(`[Websockets] Message received`, m);
+    }
+    if (m?.data) {
+      let json = JSON.parse(m.data);
+      if (json?.data) {
+        fireCallbacks(json, m.originDeviceId);
+      } else if (devMode && json) {
+        console.debug('[Websockets] Message improperly formatted', json);
+      }
+    }
+  };
+  initialized = true;
+};
+
 const fireCallbacks = ({ type, data, originDeviceId }) => {
   if (
     type &&
@@ -37,29 +64,7 @@ const WebSockets = {
         deviceId = devId;
         devMode = !!useDevMode;
         try {
-          ws = new WebSocket(WS_BASE_URL);
-          ws.onerror = (e) => console.error(e);
-          ws.onopen = () =>
-            console.debug(
-              `WebSocket connection established for device ID: ${deviceId}`
-            );
-          ws.onclose = () => console.debug('WebSocket connection closed');
-          ws.onmessage = (m) => {
-            if (devMode && m) {
-              console.debug(`[Websockets] Message received`, m);
-            }
-            if (m?.data) {
-              let json = JSON.parse(m.data);
-              if (json?.data) {
-                fireCallbacks(json, m.originDeviceId);
-              } else if (devMode && json) {
-                console.debug(
-                  '[Websockets] Message improperly formatted',
-                  json
-                );
-              }
-            }
-          };
+          createWsConnection();
           initialized = true;
           resolve();
         } catch (e) {
