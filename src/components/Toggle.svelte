@@ -1,25 +1,13 @@
-<!-- 
-    const Toggle = ({ onOff, toggled, property, id, altColor }) => {
-
-  return (
-    <div class={`toggle ${altColor ? 'alt-color' : ''}`}>
-      <input id={id} type="checkbox" checked={onOff} onChange={(e) => toggled(property)} />
-      <label for={id}>Toggle</label>
-    </div>
-  );
-};
-
-export default Toggle;
- -->
 <script>
-  export let altColor;
-  export let onOff;
-  export let toggled;
-  export let property;
-  export let id;
+  export let altColor = '';
+  export let onOff = false;
+  export let toggled = null;
+  export let property = '';
+  export let id = '';
+  export let style = '';
 </script>
 
-<div class={`toggle ${altColor ? 'alt-color' : ''}`}>
+<div class={`toggle ${altColor ? 'alt-color' : ''}`} {style}>
   <input
     {id}
     type="checkbox"

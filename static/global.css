@@ -136,7 +136,7 @@
 
 :root {
   --pageBg: #f4fcff;
-  --colorDefaultText: #444;
+  --colorDefaultText: #333;
   --colorMediumText: #888;
   --colorLighterText: #aaa;
   --colorDisabledText: #ccc;
@@ -151,6 +151,7 @@
   --footerTextColor: #405784;
   --activeLinkColor: white;
   --scoreFlashColor: rgba(68, 178, 181, 0.5);
+  --heading-with-extender-color: #ccc;
   --mainFont: 'Lato', -apple-system, BlinkMacSystemFont, sytem-ui,
     'Helvetica Neue', arial, sans-serif;
   --blockFont: 'Sanchez', 'Lato', -apple-system, BlinkMacSystemFont, sytem-ui,
@@ -235,6 +236,10 @@ h1 {
 
 ul {
   padding: 0;
+}
+
+hr {
+  width: 100%;
 }
 
 .font-small {

@@ -1,22 +1,33 @@
 <script>
   import { getStores } from '$app/stores';
+  import { ROUTES } from '../modules/constants';
   const { page } = getStores();
-  const routes = [
-    { title: 'Home', href: '/' },
-    { title: 'Stats', href: '/stats' }
-  ];
+
   let view = '';
+  let menu = false;
+  $: backdropClass = `nav-modal-backdrop${menu ? ' show' : ''}`;
+
   page.subscribe(({ path }) => (view = path));
+
+  function toggleMenu() {
+    menu = !menu;
+  }
 </script>
 
 <header class="header">
-  <button class="btn menu-btn">Menu</button>
+  <button class="btn menu-btn" on:click={toggleMenu}>Menu</button>
   <a href="/" tabindex="0"><h1>Pong Tracker</h1></a>
-  <nav>
-    {#each routes as { href, title }}
-      <a {href} {title} class:active={view === href}>{title}</a>
+  <nav class={menu ? 'show' : 'hide'}>
+    {#each ROUTES as { href, title }}
+      <a
+        {href}
+        {title}
+        class:active={view === href}
+        on:click={() => (menu = false)}>{title}</a
+      >
     {/each}
   </nav>
+  <div class={backdropClass} on:click={toggleMenu} />
 </header>
 
 <style lang="scss">
@@ -158,6 +169,7 @@
   }
   .btn.menu-btn {
     display: none;
+    margin-right: 10px;
   }
   .nav-modal-backdrop {
     display: none;

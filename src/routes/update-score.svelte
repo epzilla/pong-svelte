@@ -31,11 +31,22 @@
   import WebSockets from '../modules/websockets';
   import LocalStorage from '../modules/localStorage';
   import {
-    SCORE_UPDATE,
+    CONFIRM_END_MATCH,
+    DEVICE_CANNOT_UPDATE_MATCH,
+    END_MATCH,
+    END_MATCH_AFFIRMATIVE,
+    END_MATCH_CONFIRMATION_PROMPT,
+    END_MATCH_NEGATIVE,
+    FINAL_TOGGLE_LABEL,
     GAME_FINISHED,
     GAME_STARTED,
-    DEVICE_CANNOT_UPDATE_MATCH,
-    MATCH_FINISHED
+    LET_OTHERS_UPDATE,
+    MATCH_FINISHED,
+    NO_MATCH_IN_PROGRESS,
+    PLAYING_TO_AND_BEST_OF_PROMPT,
+    SCORE_UPDATE,
+    START_NEW_ONE,
+    UPDATE_SCORE
   } from '../modules/constants';
 
   import { onMount, onDestroy } from 'svelte';
@@ -45,7 +56,7 @@
   import Expandable from '../components/Expandable.svelte';
   import Stepper from '../components/Stepper.svelte';
   import Toggle from '../components/Toggle.svelte';
-  import { getScoreHeaderLine, getTeamName } from '../modules/helpers';
+  import { getScoreHeaderLine, getTeamName, isEmpty } from '../modules/helpers';
 
   const device = LocalStorage.get('device');
   const deviceId = device?.id || null;
@@ -54,9 +65,10 @@
   let gamesCollapsed = {};
   let showChooseOtherDevice = false;
   let showConfirmEndMatch = false;
+  let notAuthorized = false;
 
   function selectDevices(devices) {
-    if (devices && devices.length > 0) {
+    if (devices?.length > 0) {
       showChooseOtherDevice = false;
       let packet = Object.assign(
         {
@@ -107,7 +119,7 @@
 
   function onMatchFinishedFromElsewhere(m) {
     if (m.id === match.id) {
-      goto('/');
+      goto(`/match-summary/${match.id}`);
     }
   }
 
@@ -239,7 +251,7 @@
   }
 
   onMount(async () => {
-    if (match && deviceId && devices) {
+    if (!isEmpty(match) && deviceId && devices) {
       WebSockets.subscribe(SCORE_UPDATE, onScoreUpdateFromElsewhere);
       WebSockets.subscribe(GAME_STARTED, onGameStartedElsewhere);
       WebSockets.subscribe(MATCH_FINISHED, onMatchFinishedFromElsewhere);
@@ -251,11 +263,10 @@
         match.games.forEach((g) => (gamesCollapsed[g.id] = !!g.gameFinished));
       } else {
         console.warn(DEVICE_CANNOT_UPDATE_MATCH);
-        goto('/');
+        notAuthorized = true;
       }
     } else {
-      console.warn(DEVICE_CANNOT_UPDATE_MATCH);
-      goto('/');
+      console.warn(NO_MATCH_IN_PROGRESS);
     }
   });
 
@@ -268,93 +279,101 @@
 </script>
 
 <div class="main update-score">
-  <h2 class="align-center">Update Score</h2>
-  <p class="match-update-info">
-    <i class="fa fa-info-circle" />
-    <span
-      >Playing to {match.playTo}, {match.playAllGames ? 'total of' : 'best of'}
-      {match.bestOf} games.</span
-    >
-  </p>
-  <ul class="games-list select-list">
-    {#each match.games as game, i}
-      <li>
-        <Expandable
-          title={getTitle(game, i)}
-          forceCollapsed={gamesCollapsed[game.id]}
-          id={game.id}
-          toggle={(id) => toggleExpanded(id)}
-        >
-          <div class="game-update-row">
-            <div class="flex-col flex-center">
-              <h4>{getTeamName(match, 1)}</h4>
-              <Stepper
-                full
-                min={0}
-                onChange={(e) => scoreChange(game, 1, e)}
-                initialValue={game.score1}
-              />
-            </div>
-            <div class="flex-col flex-justify-end">
-              <div class="stepper-separator">
-                <h4 class="vs-symbol align-center">vs</h4>
+  {#if !isEmpty(match)}
+    <h2 class="align-center">{UPDATE_SCORE}</h2>
+    <p class="match-update-info">
+      <i class="fa fa-info-circle" />
+      <span> {PLAYING_TO_AND_BEST_OF_PROMPT(match)}</span>
+    </p>
+    <ul class="games-list select-list">
+      {#if match?.games}
+        {#each match.games as game, i}
+          <li>
+            <Expandable
+              title={getTitle(game, i)}
+              forceCollapsed={gamesCollapsed[game.id]}
+              id={game.id}
+              toggle={(id) => toggleExpanded(id)}
+            >
+              <div class="game-update-row">
+                <div class="flex-col flex-center">
+                  <h4>{getTeamName(match, 1)}</h4>
+                  <Stepper
+                    full
+                    min={0}
+                    onChange={(e) => scoreChange(game, 1, e)}
+                    initialValue={game.score1}
+                  />
+                </div>
+                <div class="flex-col flex-justify-end">
+                  <div class="stepper-separator">
+                    <h4 class="vs-symbol align-center">vs</h4>
+                  </div>
+                </div>
+                <div class="flex-col flex-center">
+                  <h4>{getTeamName(match, 2)}</h4>
+                  <Stepper
+                    full
+                    min={0}
+                    onChange={(e) => scoreChange(game, 2, e)}
+                    initialValue={game.score2}
+                  />
+                </div>
               </div>
-            </div>
-            <div class="flex-col flex-center">
-              <h4>{getTeamName(match, 2)}</h4>
-              <Stepper
-                full
-                min={0}
-                onChange={(e) => scoreChange(game, 2, e)}
-                initialValue={game.score2}
-              />
-            </div>
-          </div>
-          <div class="flex final-score-toggle">
-            <label>Final?</label>
-            <Toggle
-              id={`game-${i}-finished`}
-              toggled={toggleFinished}
-              onOff={game.gameFinished}
-              property={game.id}
-            />
-          </div>
-        </Expandable>
-      </li>
-    {/each}
-  </ul>
-  <button class="btn big success" on:click={confirmEndMatch}>
-    <i class="fa fa-check" />
-    <span>End Match</span>
-  </button>
-  {#if devices?.length > 0}
-    <button
-      class="btn big primary change-device-btn"
-      on:click={chooseOtherDevice}
-    >
-      <div class="exchange-btns">
-        <i class="fa fa-mobile" />
-        <i class="fa fa-exchange" />
-        <i class="fa fa-mobile" />
-      </div>
-      <span>Let Others Update</span>
+              <div class="flex final-score-toggle">
+                <label>{FINAL_TOGGLE_LABEL}</label>
+                <Toggle
+                  id={`game-${i}-finished`}
+                  toggled={toggleFinished}
+                  onOff={game.gameFinished}
+                  property={game.id}
+                />
+              </div>
+            </Expandable>
+          </li>
+        {/each}
+      {/if}
+    </ul>
+    <button class="btn big success" on:click={confirmEndMatch}>
+      <i class="fa fa-check" />
+      <span>{END_MATCH}</span>
     </button>
+    {#if devices?.length > 0}
+      <button
+        class="btn big primary change-device-btn"
+        on:click={chooseOtherDevice}
+      >
+        <div class="exchange-btns">
+          <i class="fa fa-mobile" />
+          <i class="fa fa-exchange" />
+          <i class="fa fa-mobile" />
+        </div>
+        <span>{LET_OTHERS_UPDATE}</span>
+      </button>
+    {/if}
+    <Modal
+      header={CONFIRM_END_MATCH}
+      show={showConfirmEndMatch}
+      content={END_MATCH_CONFIRMATION_PROMPT}
+      confirmText={END_MATCH_AFFIRMATIVE}
+      cancelText={END_MATCH_NEGATIVE}
+      confirm={endMatch}
+      dismiss={dismissEndMatchModal}
+    />
+    <SelectDeviceModal
+      show={showChooseOtherDevice}
+      onSelect={selectDevices}
+      {devices}
+      dismiss={dismissDeviceModal}
+    />
+  {:else if notAuthorized}
+    <h3>{DEVICE_CANNOT_UPDATE_MATCH}</h3>
+  {:else}
+    <h3>{NO_MATCH_IN_PROGRESS}</h3>
+    <button class="btn big primary" on:click={() => goto('/new-match')}
+      >{START_NEW_ONE}</button
+    >
   {/if}
-  <Modal
-    header="Confirm End Match"
-    show={showConfirmEndMatch}
-    content="Are you sure you want to end this match?"
-    confirmText="Yep! It's Over, son!"
-    cancelText="Oops! No."
-    confirm={endMatch}
-    dismiss={dismissEndMatchModal}
-  />
-  <SelectDeviceModal
-    show={showChooseOtherDevice}
-    onSelect={selectDevices}
-    {devices}
-    dismiss={dismissDeviceModal}
-  />
 </div>
 
 <style lang="scss">

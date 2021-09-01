@@ -27,6 +27,7 @@
   import Rest from '../modules/rest';
   import Toggle from '../components/Toggle.svelte';
   import BoxScore from '../components/BoxScore.svelte';
+  import HeadingWithExtenderLines from '../components/HeadingWithExtenderLines.svelte';
   export let players;
   export let playerOptions;
 
@@ -143,7 +144,7 @@
           on:select={onPlayer1Select}
         />
       </div>
-      <span class="row-vs-span">vs.</span>
+      <HeadingWithExtenderLines text="vs." align="center" />
       <div class="select-container">
         <Select
           items={playerOptions}
@@ -263,9 +264,11 @@
               labels: perGameData.map((pg, i) => `Game ${i + 1}`),
               datasets: [
                 {
+                  name: perGameData[0].player1,
                   values: perGameData.map((pg) => pg.avgPointsFor)
                 },
                 {
+                  name: perGameData[0].player2,
                   values: perGameData.map((pg) => pg.avgPointsAgainst)
                 }
               ]
@@ -287,3 +290,19 @@
     </div>
   {/if}
 </div>
+
+<style lang="scss">
+  .toggle-wrap {
+    margin: 10px 0;
+  }
+
+  .date-input-wrapper {
+    display: grid;
+    grid-template-columns: 50px auto;
+    margin-bottom: 10px;
+
+    input {
+      max-width: 400px;
+    }
+  }
+</style>
