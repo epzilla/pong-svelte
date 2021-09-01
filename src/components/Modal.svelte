@@ -1,5 +1,6 @@
 <script>
   import { scale, fade } from 'svelte/transition';
+  import { CANCEL, OK } from '../modules/constants';
 
   export let show = false;
   export let confirm;
@@ -28,10 +29,10 @@
       <div class="modal-btn-container flex">
         {#if confirm}
           <button class="btn secondary" on:click={() => confirm()}
-            >{confirmText || 'OK'}</button
+            >{confirmText || OK}</button
           >
           <button class="btn" on:click={() => dismiss()}
-            >{cancelText || 'Cancel'}</button
+            >{cancelText || CANCEL}</button
           >
         {/if}
       </div>
