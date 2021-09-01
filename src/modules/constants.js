@@ -99,6 +99,7 @@ export const START_NEW_ONE = 'Start a new one!';
 export const SUBMIT = 'Submit';
 export const TAP = 'Tap';
 export const TO = 'to';
+export const TOGGLE = 'Toggle';
 export const UPDATE_SCORE = 'Update Score';
 export const UPDATE_SCORES = 'Update scores';
 export const VS_ABBREV = 'vs.';

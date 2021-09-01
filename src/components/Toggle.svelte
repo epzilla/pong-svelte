@@ -1,4 +1,6 @@
 <script>
+  import { TOGGLE } from '../modules/constants';
+
   export let altColor = '';
   export let onOff = false;
   export let toggled = null;
@@ -14,7 +16,7 @@
     checked={onOff}
     on:change={(e) => toggled(property)}
   />
-  <label for={id}>Toggle</label>
+  <label for={id}>{TOGGLE}</label>
 </div>
 
 <style lang="scss">

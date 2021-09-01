@@ -82,14 +82,6 @@
         amount: curVal
       });
   }
-
-  //   See if maybe we don't need this
-
-  //   afterUpdate(() => {
-  //       if (initialValue) {
-  //           val = initialValue;
-  //       }
-  //   })
 </script>
 
 <div class={classes}>
