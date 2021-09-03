@@ -118,7 +118,10 @@
 <div class={classes}>
   {#if match}
     {#if match.finished}
-      <h4 class="date-time-header">{getFormattedMatchDate(match)}</h4>
+      <h4 class="date-time-header">
+        <a href={`/match-summary/${match.id}`}>{getFormattedMatchDate(match)}</a
+        >
+      </h4>
     {/if}
     <div class="header-row flex">
       <span class="player-name" />
@@ -131,10 +134,11 @@
       {/each}
     </div>
     <div class="score-row flex">
-      <span
+      <a
+        href={`/players/${match.player1Id}`}
         class={`player-name ${
           stats?.winner && stats.winner === match.player1Id ? 'winner' : ''
-        }`}>{getTeamName(match, 1)}</span
+        }`}>{getTeamName(match, 1)}</a
       >
       {#each headerRowNums as i}
         {#if match.games.length >= i + 1}
@@ -147,10 +151,11 @@
       {/each}
     </div>
     <div class="score-row flex">
-      <span
+      <a
+        href={`/players/${match.player2Id}`}
         class={`player-name ${
           stats?.winner && stats.winner === match.player2Id ? 'winner' : ''
-        }`}>{getTeamName(match, 2)}</span
+        }`}>{getTeamName(match, 2)}</a
       >
       {#each headerRowNums as i}
         {#if match.games.length >= i + 1}
@@ -199,6 +204,18 @@
 </div>
 
 <style lang="scss">
+  a {
+    color: var(----colorDefaultText);
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: underline;
+    }
+  }
+
   .scoreboard {
     display: flex;
     flex-direction: column;
@@ -212,6 +229,10 @@
 
     @media screen and (max-width: 700px) {
       min-width: 65vw;
+    }
+
+    > .score-row:not(.stats-row) {
+      align-items: center;
     }
   }
 
