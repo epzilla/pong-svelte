@@ -126,7 +126,9 @@
   }
 
   function onDevicesAdded({ match, deviceIds }) {
-    notAuthorized = deviceIds.every((d) => d !== deviceId);
+    if (notAuthorized) {
+      notAuthorized = deviceIds.every((d) => d !== deviceId);
+    }
   }
 
   function confirmEndMatch() {
@@ -254,6 +256,9 @@
   }
 
   onMount(async () => {
+    if (isEmpty(match)) {
+      match = $currentMatch;
+    }
     if (!isEmpty(match) && deviceId && devices) {
       WebSockets.subscribe(SCORE_UPDATE, onScoreUpdateFromElsewhere);
       WebSockets.subscribe(GAME_STARTED, onGameStartedElsewhere);

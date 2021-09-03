@@ -1,6 +1,6 @@
 <script context="module">
   import { isEmpty } from '../modules/helpers';
-  import { BASE_URL } from '../modules/constants';
+  import { BASE_URL, MATCH_FINISHED } from '../modules/constants';
 
   export async function load({ fetch, context }) {
     try {
@@ -62,6 +62,12 @@
     matchInProgress = m;
   }
 
+  function onMatchFinishedElsewhere(m) {
+    if (m?.id && !recentMatches.some((rm) => rm.id === m.id)) {
+      recentMatches = [m, ...recentMatches];
+    }
+  }
+
   function onDevicesAdded({ match, deviceIds }) {
     if (!canUpdateScore && deviceIds.indexOf(deviceId) !== -1) {
       canUpdateScore = true;
@@ -81,9 +87,9 @@
     if (deviceId) {
       await WebSockets.init(deviceId, !!devMode);
       canUpdateScore = await Rest.get(`matches/can-update-score/${deviceId}`);
-      console.log($currentMatch);
       matchInProgress = $currentMatch;
       WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
+      WebSockets.subscribe(MATCH_FINISHED, onMatchFinishedElsewhere);
       WebSockets.subscribe(ADDED_DEVICES_TO_MATCH, onDevicesAdded);
     } else {
       goto('/set-device');
@@ -101,6 +107,7 @@
   onDestroy(() => {
     WebSockets.unsubscribe(MATCH_STARTED, onMatchStartedElsewhere);
     WebSockets.subscribe(ADDED_DEVICES_TO_MATCH, onDevicesAdded);
+    WebSockets.subscribe(MATCH_FINISHED, onMatchFinishedElsewhere);
   });
 </script>
 
