@@ -1,4 +1,5 @@
 <script>
+  import LocalStorage from '../modules/localStorage';
   import DeviceListItem from './DeviceListItem.svelte';
   import Modal from './Modal.svelte';
   import SelectList from './SelectList.svelte';
@@ -13,7 +14,12 @@
   export let onSelect;
   export let dismiss;
   export let show;
+
+  let device = LocalStorage.get('device');
+  let deviceId = device?.id;
   let selectedDevices = [];
+
+  $: filteredDevices = devices?.filter((d) => d.id !== deviceId);
 
   function toggleItemSelected(d) {
     let allSelected = [...selectedDevices];
@@ -47,7 +53,7 @@
         <SelectList
           className="device-select-list"
           selectedItems={selectedDevices}
-          items={devices}
+          items={filteredDevices}
           onSelect={toggleItemSelected}
           component={DeviceListItem}
         />

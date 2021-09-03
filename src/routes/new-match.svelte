@@ -110,6 +110,25 @@
         partner2 = p;
         break;
     }
+
+    // Check to make sure there aren't any duplicates
+    let dupeIndex = [player1, player2, partner1, partner2].findIndex(
+      (player, i) => player && p.id === player.id && isSelectingPlayer !== i + 1
+    );
+    switch (dupeIndex) {
+      case 0:
+        player1 = null;
+        break;
+      case 1:
+        player2 = null;
+        break;
+      case 2:
+        partner1 = null;
+        break;
+      case 3:
+        partner2 = null;
+        break;
+    }
     isSelectingPlayer = -1;
     setAndCacheState();
   }
@@ -405,8 +424,11 @@
   <SelectPlayerModal
     {isSelectingPlayer}
     dismiss={() => (isSelectingPlayer = -1)}
+    {doubles}
     {player1}
     {player2}
+    {partner1}
+    {partner2}
     {players}
     select={selectPlayer}
   />

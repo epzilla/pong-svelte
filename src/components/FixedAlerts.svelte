@@ -2,15 +2,11 @@
   import { alerts } from '../modules/stores';
   import Alert from './Alert.svelte';
   export let device = '';
-
-  function dismiss(i) {
-    $alerts = $alerts.filter((a, j) => i !== j);
-  }
 </script>
 
 <div class="fixed-alerts">
-  {#each $alerts as al, index}
-    <Alert alert={al} {device} {dismiss} {index} />
+  {#each $alerts as al}
+    <Alert alert={al} {device} />
   {/each}
 </div>
 

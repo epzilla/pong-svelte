@@ -19,7 +19,13 @@
 </script>
 
 <script>
+  import format from 'date-fns/format/index.js';
+  import isAfter from 'date-fns/isAfter/index.js';
+  import Chart from 'svelte-frappe-charts';
+  import Select from 'svelte-select';
   import {
+    CLICK,
+    DEVICE_TYPES,
     FILTER_BY_DATE,
     FROM,
     GAME_BY_GAME_AVERAGES,
@@ -30,12 +36,14 @@
     MATCHES_WON,
     POINTS_WON,
     SUBMIT,
+    TAP,
     TO
   } from '../modules/constants';
-  import format from 'date-fns/format/index.js';
-  import isAfter from 'date-fns/isAfter/index.js';
-  import Chart from 'svelte-frappe-charts';
-  import Select from 'svelte-select';
+  import {
+    generateMatchStartAlert,
+    getBestGuessDevice
+  } from '../modules/helpers';
+  import LocalStorage from '../modules/localStorage';
   import Rest from '../modules/rest';
   import WebSockets from '../modules/websockets';
   import Toggle from '../components/Toggle.svelte';
@@ -57,6 +65,18 @@
 
   let player1 = playerOptions?.length > 0 ? playerOptions[0] : null;
   let player2 = playerOptions?.length > 1 ? playerOptions[1] : null;
+
+  let device = LocalStorage.get('device');
+  let deviceType = device?.type ? device.type : getBestGuessDevice();
+  let clickOrTap = CLICK;
+
+  if (
+    deviceType === DEVICE_TYPES.MOBILE_DEVICE ||
+    deviceType === DEVICE_TYPES.TABLET_DEVICE
+  ) {
+    clickOrTap = TAP;
+  }
+
   $: submitEnabled = !!(player1 && player2);
 
   function onPlayer1Select({ detail }) {
@@ -113,10 +133,10 @@
   function onMatchStartedElsewhere(match) {
     addAlert({
       type: MATCH_STARTED,
-      msg: match,
+      msg: generateMatchStartAlert(match, clickOrTap),
       timeout: 15000,
       clickable: true,
-      action: goto('/')
+      action: () => goto('/')
     });
   }
 

@@ -1,34 +1,8 @@
 <script>
-  import { onMount } from 'svelte';
   import { fly } from 'svelte/transition';
-  import { goto } from '$app/navigation';
-  import {
-    CLICK,
-    DEVICE_TYPES,
-    MATCH_STARTED,
-    TAP
-  } from '../modules/constants';
-  import {
-    generateMatchStartAlert,
-    getBestGuessDevice
-  } from '../modules/helpers';
+  import { dismissAlert } from '../modules/stores';
 
   export let alert;
-  export let device;
-  export let dismiss;
-  export let index;
-
-  let clickOrTap = CLICK;
-
-  onMount(() => {
-    let type = device && device.type ? device.type : getBestGuessDevice();
-    if (
-      type === DEVICE_TYPES.MOBILE_DEVICE ||
-      type === DEVICE_TYPES.TABLET_DEVICE
-    ) {
-      clickOrTap = TAP;
-    }
-  });
 </script>
 
 <div
@@ -38,21 +12,17 @@
   on:click={() => {
     if (alert.action) {
       alert.action();
-      dismiss(index);
+      dismissAlert(alert.id);
     }
   }}
 >
-  {#if alert.type === MATCH_STARTED}
-    <span>{generateMatchStartAlert(alert.msg, clickOrTap)}</span>
-  {:else}
-    <span>{alert.msg}</span>
-  {/if}
+  <span>{alert.msg}</span>
   <button
     class="close-button"
     on:click={(e) => {
       e.preventDefault();
       e.stopPropagation();
-      dismiss(index);
+      dismissAlert(alert.id);
     }}>&times;</button
   >
 </div>

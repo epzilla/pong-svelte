@@ -8,22 +8,43 @@
 
   export let isSelectingPlayer;
   export let dismiss;
+  export let doubles;
   export let player1;
   export let player2;
+  export let partner1;
+  export let partner2;
   export let players;
   export let select;
 
   let isAddingPlayer = 0;
 
   $: selectablePlayers =
-    players?.filter(
-      (p) =>
-        p &&
-        (!player1 || p.id !== player1.id) &&
-        (!player2 || p.id !== player2.id)
-    ) || [];
-
-  let selectedPlayers = isSelectingPlayer === 1 ? [player1] : [player2];
+    players?.filter((p) => {
+      switch (isSelectingPlayer) {
+        case 1:
+          if (doubles) {
+            return p?.id !== player1?.id && p?.id !== partner1?.id;
+          }
+          return p?.id !== player1?.id;
+        case 2:
+          if (doubles) {
+            return p?.id !== player2?.id && p?.id !== partner2?.id;
+          }
+          return p?.id !== player2?.id;
+        case 3:
+          if (doubles) {
+            return p?.id !== player1?.id && p?.id !== partner1?.id;
+          }
+          return p?.id !== partner1?.id;
+        case 4:
+          if (doubles) {
+            return p?.id !== player2?.id && p?.id !== partner2?.id;
+          }
+          return p?.id !== partner2?.id;
+        default:
+          return true;
+      }
+    }) || [];
 
   function addPlayer(newPlayer) {
     players.push(newPlayer);
@@ -56,7 +77,7 @@
         <div class="player-select-list-wrap flex-1 flex-col">
           <SelectList
             className="player-select-list"
-            selectedItems={selectedPlayers}
+            selectedItems={[]}
             items={selectablePlayers}
             onSelect={(p) => select(p)}
             component={PlayerListItem}

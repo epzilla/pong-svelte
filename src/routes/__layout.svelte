@@ -37,6 +37,14 @@
   currentMatch.subscribe((m) => {
     matchInProgress = m;
   });
+
+  if (
+    typeof Notification !== 'undefined' &&
+    Notification.permission !== 'granted' &&
+    Notification.permission !== 'denied'
+  ) {
+    Notification.requestPermission();
+  }
 </script>
 
 <Nav match={matchInProgress} />
