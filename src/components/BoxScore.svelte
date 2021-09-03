@@ -135,7 +135,9 @@
     </div>
     <div class="score-row flex">
       <a
-        href={`/players/${match.player1Id}`}
+        href={match.doubles
+          ? `/teams/${match.player1Id}-${match.partner1Id}`
+          : `/players/${match.player1Id}`}
         class={`player-name ${
           stats?.winner && stats.winner === match.player1Id ? 'winner' : ''
         }`}>{getTeamName(match, 1)}</a
@@ -152,7 +154,9 @@
     </div>
     <div class="score-row flex">
       <a
-        href={`/players/${match.player2Id}`}
+        href={match.doubles
+          ? `/teams/${match.player2Id}-${match.partner2Id}`
+          : `/players/${match.player2Id}`}
         class={`player-name ${
           stats?.winner && stats.winner === match.player2Id ? 'winner' : ''
         }`}>{getTeamName(match, 2)}</a
