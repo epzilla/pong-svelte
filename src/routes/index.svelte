@@ -125,7 +125,7 @@
   <h3 class="align-center primary-text">{RECENT_MATCHES}</h3>
   <ul>
     {#each recentMatches as m}
-      {#if !m || m.id !== matchInProgress.id}
+      {#if !m || m.id !== matchInProgress?.id}
         <BoxScore match={m} />
       {/if}
     {/each}

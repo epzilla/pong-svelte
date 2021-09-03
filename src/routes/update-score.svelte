@@ -27,6 +27,7 @@
   import WebSockets from '../modules/websockets';
   import LocalStorage from '../modules/localStorage';
   import {
+    ADDED_DEVICES_TO_MATCH,
     CONFIRM_END_MATCH,
     DEVICE_CANNOT_UPDATE_MATCH,
     END_MATCH,
@@ -67,7 +68,7 @@
   let gamesCollapsed = {};
   let showChooseOtherDevice = false;
   let showConfirmEndMatch = false;
-  let notAuthorized = false;
+  let notAuthorized = true;
 
   async function selectDevices(devices) {
     if (devices?.length > 0) {
@@ -122,6 +123,10 @@
 
   function onGameFinishedFromElsewhere({ game }) {
     onGameStartedElsewhere(game);
+  }
+
+  function onDevicesAdded({ match, deviceIds }) {
+    notAuthorized = deviceIds.every((d) => d !== deviceId);
   }
 
   function confirmEndMatch() {
@@ -254,14 +259,15 @@
       WebSockets.subscribe(GAME_STARTED, onGameStartedElsewhere);
       WebSockets.subscribe(MATCH_FINISHED, onMatchFinishedFromElsewhere);
       WebSockets.subscribe(GAME_FINISHED, onGameFinishedFromElsewhere);
+      WebSockets.subscribe(ADDED_DEVICES_TO_MATCH, onDevicesAdded);
       const canUpdateScore = await Rest.get(
         `matches/can-update-score/${deviceId}`
       );
+      notAuthorized = !canUpdateScore;
       if (canUpdateScore) {
         match.games.forEach((g) => (gamesCollapsed[g.id] = !!g.gameFinished));
       } else {
         console.warn(DEVICE_CANNOT_UPDATE_MATCH);
-        notAuthorized = true;
       }
     } else {
       console.warn(NO_MATCH_IN_PROGRESS);
@@ -273,11 +279,19 @@
     WebSockets.unsubscribe(GAME_STARTED, onGameStartedElsewhere);
     WebSockets.unsubscribe(MATCH_FINISHED, onMatchFinishedFromElsewhere);
     WebSockets.unsubscribe(GAME_FINISHED, onGameFinishedFromElsewhere);
+    WebSockets.unsubscribe(ADDED_DEVICES_TO_MATCH, onDevicesAdded);
   });
 </script>
 
 <div class="main update-score">
-  {#if !isEmpty(match)}
+  {#if isEmpty(match)}
+    <h3>{NO_MATCH_IN_PROGRESS}</h3>
+    <button class="btn big primary" on:click={() => goto('/new-match')}
+      >{START_NEW_ONE}</button
+    >
+  {:else if notAuthorized}
+    <h3>{DEVICE_CANNOT_UPDATE_MATCH}</h3>
+  {:else}
     <h2 class="align-center">{UPDATE_SCORE}</h2>
     <p class="match-update-info">
       <i class="fa fa-info-circle" />
@@ -364,13 +378,6 @@
       {devices}
       dismiss={dismissDeviceModal}
     />
-  {:else if notAuthorized}
-    <h3>{DEVICE_CANNOT_UPDATE_MATCH}</h3>
-  {:else}
-    <h3>{NO_MATCH_IN_PROGRESS}</h3>
-    <button class="btn big primary" on:click={() => goto('/new-match')}
-      >{START_NEW_ONE}</button
-    >
   {/if}
 </div>
 
