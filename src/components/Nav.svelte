@@ -1,5 +1,6 @@
 <script>
   import { getStores } from '$app/stores';
+  import { currentMatch } from '../modules/stores';
   import { MENU, ROUTES, SITE_TITLE } from '../modules/constants';
   import { isEmpty } from '../modules/helpers';
   const { page } = getStores();
@@ -14,6 +15,7 @@
     : ROUTES.filter((r) => !r.hideIfMatchInProgress);
 
   page.subscribe(({ path }) => (view = path));
+  currentMatch.subscribe((m) => (match = m));
 
   function toggleMenu() {
     menu = !menu;

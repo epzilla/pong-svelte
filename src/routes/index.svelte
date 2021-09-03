@@ -2,15 +2,14 @@
   import { isEmpty } from '../modules/helpers';
   import { BASE_URL } from '../modules/constants';
 
-  export async function load({ fetch }) {
+  export async function load({ fetch, context }) {
     try {
-      const [recentMatchesResult, matchResult] = await Promise.all([
-        fetch(`${BASE_URL}matches/most-recent/5`),
-        fetch(`${BASE_URL}matches/current`)
-      ]);
+      const recentMatchesResult = await fetch(
+        `${BASE_URL}matches/most-recent/5`
+      );
 
       const recentMatches = await recentMatchesResult.json();
-      const matchInProgress = await matchResult.json();
+      const { matchInProgress } = context;
       return {
         props: {
           recentMatches,
@@ -76,10 +75,14 @@
     }
   }
 
+  currentMatch.subscribe((m) => (matchInProgress = m));
+
   onMount(async () => {
     if (deviceId) {
       await WebSockets.init(deviceId, !!devMode);
       canUpdateScore = await Rest.get(`matches/can-update-score/${deviceId}`);
+      console.log($currentMatch);
+      matchInProgress = $currentMatch;
       WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
       WebSockets.subscribe(ADDED_DEVICES_TO_MATCH, onDevicesAdded);
     } else {

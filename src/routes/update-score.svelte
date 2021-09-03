@@ -2,18 +2,14 @@
 <script context="module">
   import { BASE_URL } from '../modules/constants';
 
-  export async function load({ fetch }) {
+  export async function load({ fetch, context }) {
     try {
-      const [matchResult, devicesResult] = await Promise.all([
-        fetch(`${BASE_URL}matches/current`),
-        fetch(`${BASE_URL}devices`)
-      ]);
-
-      const match = await matchResult.json();
+      const { matchInProgress } = context;
+      const devicesResult = await fetch(`${BASE_URL}devices`);
       const devices = await devicesResult.json();
       return {
         props: {
-          match,
+          match: matchInProgress,
           devices
         }
       };
@@ -93,10 +89,12 @@
     }
   }
 
-  function onScoreUpdateFromElsewhere() {
+  function onScoreUpdateFromElsewhere({ game, scorer }) {
     let i = match.games.findIndex((g) => g.id === game.id);
     if (i !== -1) {
-      match.games[i] = game;
+      let games = [...match.games];
+      games[i] = game;
+      match.games = games;
       match = match;
     }
   }

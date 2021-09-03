@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import StepperBtn from './StepperBtn.svelte';
   export let initialValue = 0;
   export const full = true;
@@ -9,10 +8,10 @@
   export let max = null;
   export let wrap = false;
 
-  let val = initialValue || 0;
+  $: val = initialValue || 0;
   let classes = `stepper stepper-full`;
 
-  onMount(() => {
+  $: {
     val = initialValue || 0;
     if (padSingleDigits && Math.abs(val) < 10) {
       if (val >= 0) {
@@ -21,7 +20,7 @@
         val = '-0' + Math.abs(val);
       }
     }
-  });
+  }
 
   function stepDown(e) {
     e.preventDefault();
