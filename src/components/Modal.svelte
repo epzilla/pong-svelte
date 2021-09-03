@@ -1,12 +1,12 @@
-<script>
+<script lang="ts">
   import { scale, fade } from 'svelte/transition';
   import { CANCEL, OK } from '../modules/constants';
 
   export let show = false;
-  export let confirm;
-  export let confirmText;
-  export let cancelText;
-  export let dismiss;
+  export let confirm: () => void = null;
+  export let confirmText: string = '';
+  export let cancelText: string = '';
+  export let dismiss: () => void = null;
 </script>
 
 <div class="modal-wrapper generic-modal-wrapper">

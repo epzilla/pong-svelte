@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export default {
   prefix: 'pong-db',
 
   get: function (key) {
     if (typeof window !== 'undefined') {
-      let prefixedKey, self;
-      self = this;
-      prefixedKey = self.prefix.concat('-', key);
+      const self = this;
+      const prefixedKey = self.prefix.concat('-', key);
       if (localStorage && localStorage.getItem) {
         try {
           return JSON.parse(localStorage.getItem(prefixedKey));
@@ -18,10 +19,9 @@ export default {
 
   set: function (key, val) {
     if (typeof window !== 'undefined') {
-      let prefixedKey, self, value;
-      self = this;
-      prefixedKey = self.prefix.concat('-', key);
-      value = JSON.stringify(val);
+      const self = this;
+      const prefixedKey = self.prefix.concat('-', key);
+      const value = JSON.stringify(val);
       if (localStorage && localStorage.setItem) {
         try {
           localStorage.setItem(prefixedKey, value);
@@ -35,9 +35,8 @@ export default {
 
   delete: function (key) {
     if (typeof window !== 'undefined') {
-      let prefixedKey, self;
-      self = this;
-      prefixedKey = self.prefix.concat('-', key);
+      const self = this;
+      const prefixedKey = self.prefix.concat('-', key);
       if (localStorage && localStorage.removeItem) {
         try {
           localStorage.removeItem(prefixedKey);
@@ -50,13 +49,13 @@ export default {
 
   deleteAll: function () {
     if (typeof window !== 'undefined') {
-      self = this;
+      const self = this;
       if (localStorage && localStorage.removeItem) {
         try {
           const keys = Object.keys(localStorage).filter(
-            (k) => k.indexOf(self.prefix) !== -1
+            k => k.indexOf(self.prefix) !== -1
           );
-          keys.forEach((k) => {
+          keys.forEach(k => {
             localStorage.removeItem(k);
           });
         } catch (e) {

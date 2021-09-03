@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { WS_BASE_URL } from './constants';
 
-let callbacks = {};
+const callbacks = {};
 let ws = null;
 let deviceId = null;
 let initialized = false;
@@ -8,7 +9,7 @@ let devMode = false;
 
 const createWsConnection = () => {
   ws = new WebSocket(WS_BASE_URL);
-  ws.onerror = (e) => console.error(e);
+  ws.onerror = e => console.error(e);
   ws.onopen = () =>
     console.debug(
       `WebSocket connection established for device ID: ${deviceId}`
@@ -17,14 +18,14 @@ const createWsConnection = () => {
     console.debug('WebSocket connection closed. Attempting to re-connect...');
     createWsConnection();
   };
-  ws.onmessage = (m) => {
+  ws.onmessage = m => {
     if (devMode && m) {
       console.debug(`[Websockets] Message received`, m);
     }
     if (m?.data) {
-      let json = JSON.parse(m.data);
+      const json = JSON.parse(m.data);
       if (json?.data) {
-        fireCallbacks(json, m.originDeviceId);
+        fireCallbacks(json);
       } else if (devMode && json) {
         console.debug('[Websockets] Message improperly formatted', json);
       }
@@ -51,12 +52,12 @@ const fireCallbacks = ({ type, data, originDeviceId }) => {
     (!originDeviceId || originDeviceId !== deviceId)
   ) {
     try {
-      let json = JSON.parse(data);
+      const json = JSON.parse(data);
       if (json) {
         if (devMode) {
           console.info(json);
         }
-        callbacks[type].forEach((cb) => cb(json));
+        callbacks[type].forEach(cb => cb(json));
       }
     } catch (e) {
       console.error(e);
@@ -65,8 +66,8 @@ const fireCallbacks = ({ type, data, originDeviceId }) => {
 };
 
 const WebSockets = {
-  init: (devId, useDevMode) => {
-    return new Promise((resolve, reject) => {
+  init: (devId: number, useDevMode: boolean) => {
+    return new Promise<void>((resolve, reject) => {
       if (initialized) {
         resolve();
       } else {
@@ -95,14 +96,14 @@ const WebSockets = {
   unsubscribe: (type, cb) => {
     if (callbacks[type]) {
       console.debug(`Unsubscribing to: ${type}`);
-      let i = callbacks[type].findIndex((fn) => fn === cb);
+      const i = callbacks[type].findIndex(fn => fn === cb);
       if (i !== -1) {
         callbacks[type].splice(i, 1);
       }
     }
   },
 
-  setDeviceId: (id) => {
+  setDeviceId: id => {
     deviceId = id;
   },
 

@@ -1,14 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import parseISO from 'date-fns/parseISO/index.js';
-import isThisYear from 'date-fns/isThisYear/index.js';
-import differenceInDays from 'date-fns/differenceInDays/index.js';
 import formatDistance from 'date-fns/formatDistance/index.js';
-import format from 'date-fns/format/index.js';
 import formatRelative from 'date-fns/formatRelative/index.js';
 import {
   ALERT_MATCH_CAN_BE_UPDATED_BY_OTHERS,
   ALERT_MATCH_STARTED,
-  DEVICE_TYPES,
-  TODAY
+  DEVICE_TYPES
 } from './constants';
 
 export const lightenOrDarken = (col, amt) => {
@@ -18,7 +17,7 @@ export const lightenOrDarken = (col, amt) => {
     usePound = true;
   }
 
-  let num = parseInt(col, 16);
+  const num = parseInt(col, 16);
   let red = (num >> 16) + amt;
   if (red > 255) {
     red = 255;
@@ -48,13 +47,13 @@ export const lightenOrDarken = (col, amt) => {
   );
 };
 
-export const getFormattedMatchDate = (game) => {
-  let date = parseISO(game.finishTime);
-  let now = new Date();
+export const getFormattedMatchDate = game => {
+  const date = parseISO(game.finishTime);
+  const now = new Date();
   return formatRelative(date, now);
 };
 
-export const getMatchTimeAgo = (match) => {
+export const getMatchTimeAgo = match => {
   if (!match) return '';
   return formatDistance(parseISO(match.startTime), new Date(), {
     includeSeconds: true,
@@ -77,20 +76,20 @@ export const getTeamName = (match, teamNum) => {
 
 export const getScoreHeaderLine = (match, game) => {
   if (game.score1 > game.score2) {
-    let teamName = match.doubles
+    const teamName = match.doubles
       ? `${match.player1.lname}/${match.partner1.lname}`
       : match.player1.lname;
     return `${game.score1}-${game.score2} (F), ${teamName}`;
   } else {
-    let teamName = match.doubles
+    const teamName = match.doubles
       ? `${match.player2.lname}/${match.partner2.lname}`
       : match.player2.lname;
     return `${game.score2}-${game.score1} (F), ${teamName}`;
   }
 };
 
-export const getStatsForMatch = (match) => {
-  let stats = {
+export const getStatsForMatch = match => {
+  const stats: MatchStats = {
     p1GamesWon: 0,
     p2GamesWon: 0,
     p1TotalPoints: 0,
@@ -102,7 +101,7 @@ export const getStatsForMatch = (match) => {
     winner: null
   };
 
-  match.games.forEach((g) => {
+  match.games.forEach(g => {
     stats.p1TotalPoints += g.score1;
     stats.p2TotalPoints += g.score2;
     stats.p1name = match.doubles
@@ -139,7 +138,7 @@ export const getStatsForMatch = (match) => {
   return stats;
 };
 
-export const getFullPlayerName = (p) => {
+export const getFullPlayerName = p => {
   let name = '';
 
   if (p.fname) {
@@ -166,17 +165,17 @@ export const getFullPlayerName = (p) => {
 };
 
 export const generateGuid = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    let r = (Math.random() * 16) | 0,
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0,
       v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 };
 
-export const calculateExpectedPointsPerMatch = (match) => {
+export const calculateExpectedPointsPerMatch = match => {
   let expectedPerGame;
 
-  let finishedGames = match.games.filter((g) => g.gameFinished);
+  const finishedGames = match.games.filter(g => g.gameFinished);
   if (finishedGames.length > 0) {
     expectedPerGame =
       finishedGames.reduce(
@@ -234,22 +233,23 @@ export const getBestGuessDevice = () => {
   return DEVICE_TYPES.OTHER_DEVICE;
 };
 
-export const isEmpty = (obj) => {
-  return !obj || (typeof obj === 'object' && Object.keys(obj).length === 0);
-};
+export const isEmpty = (obj: any) =>
+  !obj || (typeof obj === 'object' && Object.keys(obj).length === 0);
 
 export const debounce = function (func, wait, immediate) {
   let timeout;
   return function () {
-    let context = this,
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const context = this,
+      // eslint-disable-next-line prefer-rest-params
       args = arguments;
-    let later = function () {
+    const later = function () {
       timeout = null;
       if (!immediate) {
         func.apply(context, args);
       }
     };
-    let callNow = immediate && !timeout;
+    const callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
     if (callNow) {
@@ -268,14 +268,15 @@ export const generateMatchStartAlert = (match, clickOrTap) => {
   );
 };
 
-export const generateSharedDevicesAlert = (devices) => {
+export const generateSharedDevicesAlert = devices => {
   let deviceList = devices[0].name;
   if (devices.length > 1) {
+    //@ts-expect-error
     const formatter = new Intl.ListFormat(navigator.language, {
       style: 'long',
       type: 'conjunction'
     });
-    deviceList = formatter.format(devices.map((d) => d.name));
+    deviceList = formatter.format(devices.map(d => d.name));
   }
   return ALERT_MATCH_CAN_BE_UPDATED_BY_OTHERS(deviceList);
 };

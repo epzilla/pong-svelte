@@ -1,10 +1,10 @@
-<script context="module">
+<script context="module" lang="ts">
   import { BASE_URL } from '../modules/constants';
 
   export async function load({ fetch }) {
     try {
       const res = await fetch(`${BASE_URL}players`);
-      const players = await res.json();
+      const players: Player[] = await res.json();
       return {
         props: {
           players
@@ -19,7 +19,7 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
   import {
@@ -55,7 +55,7 @@
   import { currentMatch } from '../modules/stores';
   import AddPlayerModal from '../components/AddPlayerModal.svelte';
 
-  export let players;
+  export let players: Player[];
   let doubles = false;
   $: player1 = players?.length >= 2 ? players[0] : null;
   $: player2 = players?.length >= 2 ? players[1] : null;

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { scale } from 'svelte/transition';
   import SelectList from './SelectList.svelte';
   import PlayerListItem from './PlayerListItem.svelte';
@@ -6,20 +6,20 @@
   import { ADD_NEW_PLAYER, SELECT_PLAYER_NUM } from '../modules/constants';
   import { onDestroy, onMount } from 'svelte';
 
-  export let isSelectingPlayer;
-  export let dismiss;
-  export let doubles;
-  export let player1;
-  export let player2;
-  export let partner1;
-  export let partner2;
-  export let players;
+  export let isSelectingPlayer: number;
+  export let dismiss: () => void;
+  export let doubles: boolean = false;
+  export let player1: Player = null;
+  export let player2: Player = null;
+  export let partner1: Player = null;
+  export let partner2: Player = null;
+  export let players: Player[] = [];
   export let select;
 
   let isAddingPlayer = 0;
 
   $: selectablePlayers =
-    players?.filter((p) => {
+    players?.filter(p => {
       switch (isSelectingPlayer) {
         case 1:
           if (doubles) {
@@ -51,7 +51,7 @@
     select(newPlayer);
   }
 
-  function onKeyUp({ target: { id }, key }) {
+  function onKeyUp({ target, key }) {
     if (key === 'Escape' && !isAddingPlayer) {
       dismiss();
     }
@@ -79,7 +79,7 @@
             className="player-select-list"
             selectedItems={[]}
             items={selectablePlayers}
-            onSelect={(p) => select(p)}
+            onSelect={p => select(p)}
             component={PlayerListItem}
           />
         </div>

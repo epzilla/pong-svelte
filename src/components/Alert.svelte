@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
   import { fly } from 'svelte/transition';
   import { dismissAlert } from '../modules/stores';
 
-  export let alert;
+  export let alert: Alert;
 </script>
 
 <div
@@ -19,7 +19,7 @@
   <span>{alert.msg}</span>
   <button
     class="close-button"
-    on:click={(e) => {
+    on:click={e => {
       e.preventDefault();
       e.stopPropagation();
       dismissAlert(alert.id);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const WS_BASE_URL = 'wss://pong-api.herokuapp.com';
 export const BASE_URL = 'https://pong-api.herokuapp.com/';
 export const DEVICE_TYPES = {
@@ -108,26 +109,26 @@ export const WELCOME_EXCLAM = 'Welcome!';
 export const YES = 'Yes';
 
 // String interpolations
-export const ADDED_AS_PLAYER_PROMPT = (name) => `Added ${name} as a player.`;
+export const ADDED_AS_PLAYER_PROMPT = name => `Added ${name} as a player.`;
 export const ALERT_MATCH_STARTED = (
   alert,
   clickOrTap
 ) => `${alert.team1} and ${alert.team2} just started a match. ${clickOrTap}
       here to view.`;
-export const ALERT_MATCH_CAN_BE_UPDATED_BY_OTHERS = (devices) =>
+export const ALERT_MATCH_CAN_BE_UPDATED_BY_OTHERS = devices =>
   `This match can now be updated by ${devices}.`;
-export const FIRST_SERVE_PROMPT = (player) => `${player.fname} serves first!`;
-export const GAMES_PLAYED_TO_AMOUNT = (amount) =>
+export const FIRST_SERVE_PROMPT = player => `${player.fname} serves first!`;
+export const GAMES_PLAYED_TO_AMOUNT = amount =>
   `Games played to ${amount} points.`;
-export const GRANTED_ACCESS_TO_UPDATE_SCORE = (clickOrTap) =>
+export const GRANTED_ACCESS_TO_UPDATE_SCORE = clickOrTap =>
   `Your device has been granted access to update the score of the current match. ${clickOrTap} here to change the score.`;
-export const PLAYING_ALL_OR_BEST_OF = (match) =>
+export const PLAYING_ALL_OR_BEST_OF = match =>
   `${match.playAllGames ? 'Playing all' : 'Best of'} ${match.bestOf} games.`;
-export const PLAYING_TO_AND_BEST_OF_PROMPT = (match) =>
+export const PLAYING_TO_AND_BEST_OF_PROMPT = match =>
   `Playing to ${match.playTo}, ${match.playAllGames ? 'total of' : 'best of'} ${
     match.bestOf
   } games.`;
-export const SELECT_PLAYER_NUM = (num) => `Select Player ${num}`;
-export const SELECT_PLAYER_OR_PARTNER = (isPartner) =>
+export const SELECT_PLAYER_NUM = num => `Select Player ${num}`;
+export const SELECT_PLAYER_OR_PARTNER = isPartner =>
   `Select ${isPartner ? 'Partner' : 'Player'}`;
-export const STARTED_TIME_AGO = (timeAgo) => `Started ${timeAgo}`;
+export const STARTED_TIME_AGO = timeAgo => `Started ${timeAgo}`;

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import {
     FINAL,
     GAMES_PLAYED_TO_AMOUNT,
@@ -14,15 +14,15 @@
     calculateExpectedPointsPerMatch,
     shouldFlashScore
   } from '../modules/helpers';
-  export let match;
-  let stats;
-  let headerRowNums = [];
-  let footer;
-  let gameFlash;
-  let scoreFlash;
-  let jumbotron;
+  export let match: Match;
+  let stats: MatchStats;
+  let headerRowNums: number[] = [];
+  let matchFlash: boolean;
+  let gameFlash: boolean;
+  let scoreFlash: boolean;
+  let jumbotron: boolean;
   let numCols = 0;
-  let currentGame;
+  let currentGame: number;
   let classes = 'scoreboard ';
 
   $: {
@@ -99,7 +99,7 @@
     let game = match.games[currentGame];
     let previousPoints =
       match.games
-        .filter((g) => g?.gameFinished)
+        .filter(g => g?.gameFinished)
         .reduce((sum, current) => sum + (current.score1 + current.score2), 0) ||
       0;
     let totalPoints = previousPoints + (game ? game.score1 + game.score2 : 0);

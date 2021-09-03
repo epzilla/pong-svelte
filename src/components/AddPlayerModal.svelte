@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Modal from './Modal.svelte';
   import {
     ADD,
@@ -10,10 +10,10 @@
   import { getFullPlayerName } from '../modules/helpers';
   import Rest from '../modules/rest';
   import { onDestroy } from 'svelte';
-  export let dismiss;
-  export let show;
-  export let add;
-  export let players;
+  export let dismiss: () => void;
+  export let show: boolean;
+  export let add: (newPlayer: any) => void;
+  export let players: Player[];
 
   let name = '';
   let error;
@@ -23,7 +23,7 @@
   $: playerNames = players.map(getFullPlayerName);
   $: {
     if (name.length > 0) {
-      error = playerNames.some((p) => p.toLowerCase() === name.toLowerCase())
+      error = playerNames.some(p => p.toLowerCase() === name.toLowerCase())
         ? PLAYER_NAME_ALREADY_EXISTS
         : '';
       disableSubmit = !!error;
@@ -52,9 +52,9 @@
     }
   }
 
-  function onKeyUp({ target: { id }, key }) {
+  function onKeyUp({ target, key }: KeyboardEvent) {
     if (key === 'Escape') {
-      if (id === 'name' && !!name) {
+      if ((target as HTMLElement).id === 'name' && !!name) {
         name = '';
       } else {
         dismiss();

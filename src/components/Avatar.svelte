@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
   import Rest from '../modules/rest';
   import { CLICK_TO_CHANGE } from '../modules/constants';
 
   export let avatar = '';
-  export let avatarUpdatedCallback = null;
+  export let avatarUpdatedCallback: (updatedAvi: string) => void = null;
   export let big = false;
   export let coin = false;
   export let editable = false;
@@ -27,7 +27,7 @@
     if (file.type.includes('image')) {
       let reader = new FileReader();
       reader.onload = async () => {
-        newAvatar = reader.result;
+        newAvatar = reader.result as string;
         await Rest.put('avatar', { avatar: newAvatar });
         if (avatarUpdatedCallback) {
           avatarUpdatedCallback(newAvatar);
@@ -86,11 +86,7 @@
     on:dragover={handleDragover}
     on:dragleave={handleDragleave}
     on:drop={handleDrop}
-    style={{
-      backgroundImage: avatar
-        ? `url(${avatar})`
-        : `url(/assets/images/default_avatar.png)`
-    }}
+    style={avatar ? `background-image: url(${avatar})` : ''}
   >
     <input type="file" value={newAvatar} onChange={processChange} />
     <div class="edit-overlay">
@@ -103,9 +99,7 @@
     class:big
     class:coin
     class:empty
-    style={{
-      backgroundImage: avatar ? `url(${avatar})` : ''
-    }}
+    style={avatar ? `background-image: url(${avatar})` : ''}
   >
     {#if fname || lname}
       <span class="avatar-initials"
