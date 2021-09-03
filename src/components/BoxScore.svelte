@@ -24,24 +24,28 @@
   let numCols = 0;
   let currentGame;
   let classes = 'scoreboard ';
-  if (match) {
-    numCols = match.finished ? match.games.length : match.bestOf;
-    if (!jumbotron) {
-      classes += ' box-score';
-    } else if (matchFlash) {
-      classes += ' flash-final';
-    }
 
-    for (let i = 0; i < numCols; i++) {
-      headerRowNums.push(i);
-      let game = match.games[i];
-      if (game && !game.gameFinished) {
-        currentGame = i;
+  $: {
+    if (match) {
+      numCols = match.finished ? match.games.length : match.bestOf;
+      headerRowNums = [];
+      if (!jumbotron) {
+        classes += ' box-score';
+      } else if (matchFlash) {
+        classes += ' flash-final';
       }
-    }
 
-    if (match.finished) {
-      stats = getStatsForMatch(match);
+      for (let i = 0; i < numCols; i++) {
+        headerRowNums.push(i);
+        let game = match.games[i];
+        if (game && !game.gameFinished) {
+          currentGame = i;
+        }
+      }
+
+      if (match.finished) {
+        stats = getStatsForMatch(match);
+      }
     }
   }
 
