@@ -402,6 +402,10 @@
     color: #aaa;
     text-decoration: underline;
     text-align: center;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
   }
 
   .scoreboard.box-score {

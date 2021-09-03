@@ -3,10 +3,12 @@ import isThisYear from 'date-fns/isThisYear/index.js';
 import differenceInDays from 'date-fns/differenceInDays/index.js';
 import formatDistance from 'date-fns/formatDistance/index.js';
 import format from 'date-fns/format/index.js';
+import formatRelative from 'date-fns/formatRelative/index.js';
 import {
   ALERT_MATCH_CAN_BE_UPDATED_BY_OTHERS,
   ALERT_MATCH_STARTED,
-  DEVICE_TYPES
+  DEVICE_TYPES,
+  TODAY
 } from './constants';
 
 export const lightenOrDarken = (col, amt) => {
@@ -49,16 +51,7 @@ export const lightenOrDarken = (col, amt) => {
 export const getFormattedMatchDate = (game) => {
   let date = parseISO(game.finishTime);
   let now = new Date();
-
-  if (differenceInDays(now, date) < 7) {
-    return `${format(date, 'EEEE')} at ${format(date, 'h:mm')}`;
-  }
-
-  if (isThisYear(date)) {
-    return format(date, 'M/d');
-  }
-
-  return format(date, 'M/D/YY');
+  return formatRelative(date, now);
 };
 
 export const getMatchTimeAgo = (match) => {
