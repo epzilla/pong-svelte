@@ -3,7 +3,7 @@
   export let forceCollapsed = false;
   export let centered = false;
   export let small = false;
-  export let id = '';
+  export let id: number | string = '';
   export let title = '';
   export let toggle;
   let collapsed =

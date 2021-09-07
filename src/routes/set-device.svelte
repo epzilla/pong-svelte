@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import {
@@ -16,13 +16,12 @@
   import DeviceTypePicker from '../components/DeviceTypePicker.svelte';
 
   let error = '';
-  let addedDevice;
   let disableSubmit = true;
   let isSubmitting = false;
-  let type;
-  let name;
-  let devices = [];
-  let inputRef;
+  let type: string;
+  let name: string;
+  let devices: Device[] = [];
+  let inputRef: HTMLElement;
 
   onMount(() => {
     type = getBestGuessDevice();
@@ -30,6 +29,7 @@
 
   function setDeviceType(val) {
     type = val;
+    //@ts-expect-error
     window.smoothScroll(inputRef, 500);
     setTimeout(() => inputRef.focus(), 500);
   }
@@ -42,13 +42,13 @@
   }
 
   function validate() {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!name) {
         return reject(NO_NAME_ENTERED);
       }
 
       let existingDevice = devices.find(
-        (d) => d.name.toLowerCase() === name.toLowerCase()
+        d => d.name.toLowerCase() === name.toLowerCase()
       );
       if (existingDevice) {
         return reject(DEVICE_NAME_ALREADY_EXISTS);
@@ -66,7 +66,7 @@
       disableSubmit = true;
       await validate();
       try {
-        const dev = await Rest.post('devices', { name, type });
+        const dev: Device = await Rest.post('devices', { name, type });
         devices = [...devices, dev];
         disableSubmit = false;
         isSubmitting = false;
@@ -86,10 +86,7 @@
 <div class="main set-device">
   <h2>{WELCOME_EXCLAM}</h2>
   <p>{SET_DEVICE_NAME_PROMPT}</p>
-  <form
-    class="set-device flex-1 flex-col pad-1rem"
-    on:submit={(e) => submit(e)}
-  >
+  <form class="set-device flex-1 flex-col pad-1rem" on:submit={e => submit(e)}>
     <div class="form-group big">
       <label for="name">{DEVICE_NAME}</label>
       <!-- svelte-ignore a11y-positive-tabindex -->

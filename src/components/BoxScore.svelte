@@ -16,7 +16,7 @@
   } from '../modules/helpers';
 
   export let match: Match;
-  export let jumbotron: boolean;
+  export let jumbotron: boolean = false;
 
   let stats: MatchStats;
   let headerRowNums: number[] = [];

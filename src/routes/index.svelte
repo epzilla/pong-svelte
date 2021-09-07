@@ -1,4 +1,4 @@
-<script context="module">
+<script context="module" lang="ts">
   import { isEmpty } from '../modules/helpers';
   import { BASE_URL, MATCH_FINISHED } from '../modules/constants';
 
@@ -8,7 +8,7 @@
         `${BASE_URL}matches/most-recent/5`
       );
 
-      const recentMatches = await recentMatchesResult.json();
+      const recentMatches: Match[] = await recentMatchesResult.json();
       const { matchInProgress } = context;
       return {
         props: {
@@ -25,7 +25,7 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
   import LocalStorage from '../modules/localStorage';
@@ -47,28 +47,28 @@
   import { getBestGuessDevice } from '../modules/helpers';
   import { addAlert, currentMatch } from '../modules/stores';
 
-  export let recentMatches = [];
-  export let matchInProgress;
+  export let recentMatches: Match[] = [];
+  export let matchInProgress: Match;
 
   let canUpdateScore = false;
   $: matchStatus = matchInProgress ? 'Match in Progress' : 'Latest Match';
-  let device = LocalStorage.get('device');
-  let devMode = LocalStorage.get('dev-mode');
+  let device: Device = LocalStorage.get('device');
+  let devMode: boolean = LocalStorage.get('dev-mode');
   let deviceId = device?.id;
   let clickOrTap = CLICK;
 
-  function onMatchStartedElsewhere(m) {
+  function onMatchStartedElsewhere(m: Match) {
     currentMatch.set(m);
     matchInProgress = m;
   }
 
-  function onMatchFinishedElsewhere(m) {
-    if (m?.id && !recentMatches.some((rm) => rm.id === m.id)) {
+  function onMatchFinishedElsewhere(m: Match) {
+    if (m?.id && !recentMatches.some(rm => rm.id === m.id)) {
       recentMatches = [m, ...recentMatches];
     }
   }
 
-  function onDevicesAdded({ match, deviceIds }) {
+  function onDevicesAdded({ match, deviceIds }: DevicesAddedUpdate) {
     if (!canUpdateScore && deviceIds.indexOf(deviceId) !== -1) {
       canUpdateScore = true;
       addAlert({
@@ -81,7 +81,7 @@
     }
   }
 
-  currentMatch.subscribe((m) => (matchInProgress = m));
+  currentMatch.subscribe(m => (matchInProgress = m));
 
   onMount(async () => {
     if (deviceId) {

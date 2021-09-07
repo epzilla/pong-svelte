@@ -1,12 +1,12 @@
 <!-- svelte-ignore a11y-label-has-associated-control -->
-<script context="module">
+<script context="module" lang="ts">
   import { BASE_URL } from '../modules/constants';
 
   export async function load({ fetch, context }) {
     try {
       const { matchInProgress } = context;
       const devicesResult = await fetch(`${BASE_URL}devices`);
-      const devices = await devicesResult.json();
+      const devices: Device[] = await devicesResult.json();
       return {
         props: {
           match: matchInProgress,
@@ -22,7 +22,7 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   import Rest from '../modules/rest';
   import WebSockets from '../modules/websockets';
   import LocalStorage from '../modules/localStorage';
@@ -61,10 +61,10 @@
   } from '../modules/helpers';
   import { addAlert, currentMatch } from '../modules/stores';
 
-  const device = LocalStorage.get('device');
+  const device: Device = LocalStorage.get('device');
   const deviceId = device?.id || null;
-  export let devices;
-  export let match;
+  export let devices: Device[] = [];
+  export let match: Match;
   let gamesCollapsed = {};
   let showChooseOtherDevice = false;
   let showConfirmEndMatch = false;
@@ -91,7 +91,7 @@
   }
 
   function onScoreUpdateFromElsewhere({ game, scorer }) {
-    let i = match.games.findIndex((g) => g.id === game.id);
+    let i = match.games.findIndex(g => g.id === game.id);
     if (i !== -1) {
       let games = [...match.games];
       games[i] = game;
@@ -101,7 +101,7 @@
   }
 
   function onGameStartedElsewhere(game) {
-    let i = match.games.findIndex((g) => g.id === game.id);
+    let i = match.games.findIndex(g => g.id === game.id);
     if (i === -1) {
       match.games.push(game);
     } else {
@@ -127,7 +127,7 @@
 
   function onDevicesAdded({ match, deviceIds }) {
     if (notAuthorized) {
-      notAuthorized = deviceIds.every((d) => d !== deviceId);
+      notAuthorized = deviceIds.every(d => d !== deviceId);
     }
   }
 
@@ -142,7 +142,7 @@
   function checkIfMatchFinished() {
     let wins1 = 0;
     let wins2 = 0;
-    match.games.forEach((g) => {
+    match.games.forEach(g => {
       if (g.score1 > g.score2 && g.gameFinished) {
         wins1++;
       } else if (g.score2 > g.score1 && g.gameFinished) {
@@ -162,9 +162,9 @@
   }
 
   function addGame() {
-    Rest.post('games/add', { match, deviceId }).then((g) => {
+    Rest.post('games/add', { match, deviceId }).then(g => {
       match.games.push(g);
-      Object.keys(gamesCollapsed).forEach((gc) => {
+      Object.keys(gamesCollapsed).forEach(gc => {
         gamesCollapsed[gc] = true;
       });
       gamesCollapsed[g.id] = false;
@@ -175,7 +175,7 @@
 
   async function scoreChange(game, playerNum, { amount }) {
     let { games } = match;
-    let i = games.findIndex((g) => g.id === game.id);
+    let i = games.findIndex(g => g.id === game.id);
     if (i !== -1) {
       let checkForFinishedMatch = false;
       games[i][`score${playerNum}`] = amount;
@@ -221,7 +221,7 @@
             LocalStorage.set('match-ids', matchIds);
           }
         }
-        currentMatch.set({});
+        currentMatch.set(null);
         goto(`/match-summary/${match.id}`);
       });
     }
@@ -241,9 +241,9 @@
   }
 
   function toggleFinished(id) {
-    let i = match.games.findIndex((g) => g.id === id);
+    let i = match.games.findIndex(g => g.id === id);
     if (i !== -1) {
-      match.games[i].gameFinished = !match.games[i].gameFinished;
+      match.games[i].gameFinished = match.games[i].gameFinished ? 0 : 1;
       Rest.post('games/update', { game: match.games[i], deviceId }).then(() => {
         match = match;
         if (match.games[i].gameFinished) {
@@ -270,7 +270,7 @@
       );
       notAuthorized = !canUpdateScore;
       if (canUpdateScore) {
-        match.games.forEach((g) => (gamesCollapsed[g.id] = !!g.gameFinished));
+        match.games.forEach(g => (gamesCollapsed[g.id] = !!g.gameFinished));
       } else {
         console.warn(DEVICE_CANNOT_UPDATE_MATCH);
       }
@@ -310,7 +310,7 @@
               title={getTitle(game, i)}
               forceCollapsed={gamesCollapsed[game.id]}
               id={game.id}
-              toggle={(id) => toggleExpanded(id)}
+              toggle={id => toggleExpanded(id)}
             >
               <div class="game-update-row">
                 <div class="flex-col flex-center">
@@ -318,7 +318,7 @@
                   <Stepper
                     full
                     min={0}
-                    onChange={(e) => scoreChange(game, 1, e)}
+                    onChange={e => scoreChange(game, 1, e)}
                     initialValue={game.score1}
                   />
                 </div>
@@ -332,7 +332,7 @@
                   <Stepper
                     full
                     min={0}
-                    onChange={(e) => scoreChange(game, 2, e)}
+                    onChange={e => scoreChange(game, 2, e)}
                     initialValue={game.score2}
                   />
                 </div>
@@ -342,7 +342,7 @@
                 <Toggle
                   id={`game-${i}-finished`}
                   toggled={toggleFinished}
-                  onOff={game.gameFinished}
+                  onOff={!!game.gameFinished}
                   property={game.id}
                 />
               </div>
@@ -369,14 +369,19 @@
       </button>
     {/if}
     <Modal
-      header={CONFIRM_END_MATCH}
       show={showConfirmEndMatch}
-      content={END_MATCH_CONFIRMATION_PROMPT}
       confirmText={END_MATCH_AFFIRMATIVE}
       cancelText={END_MATCH_NEGATIVE}
       confirm={endMatch}
       dismiss={dismissEndMatchModal}
-    />
+    >
+      <svelte:fragment slot="header">
+        <h2>{CONFIRM_END_MATCH}</h2>
+      </svelte:fragment>
+      <svelte:fragment slot="content">
+        <p>{END_MATCH_CONFIRMATION_PROMPT}</p>
+      </svelte:fragment>
+    </Modal>
     <SelectDeviceModal
       show={showChooseOtherDevice}
       onSelect={selectDevices}

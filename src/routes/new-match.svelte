@@ -59,8 +59,8 @@
   let doubles = false;
   $: player1 = players?.length >= 2 ? players[0] : null;
   $: player2 = players?.length >= 2 ? players[1] : null;
-  let partner1 = null;
-  let partner2 = null;
+  let partner1: Player = null;
+  let partner2: Player = null;
   let isSelectingPlayer = 0;
   let isAddingNewPlayer = 0;
   let playTo = 21;
@@ -77,7 +77,8 @@
   let flippingToP2 = false;
   let p2winsToss = false;
 
-  let device = LocalStorage.get('device');
+  let device: Device = LocalStorage.get('device');
+  let devMode: boolean = LocalStorage.get('dev-mode');
   let deviceId = device?.id || null;
   let toggledOn = false;
 
@@ -192,18 +193,6 @@
     });
   }
 
-  function addNewPlayer(num) {
-    if (player1 || player2 || partner1 || partner2) {
-      LocalStorageService.set('start-match-state', {
-        player1,
-        player2,
-        partner1,
-        partner2
-      });
-    }
-    isAddingNewPlayer = isSelectingPlayer;
-  }
-
   function onCoinFlipAnimationEnd(e) {
     if (e.animationName.indexOf('coin-flip') !== -1) {
       document.removeEventListener('animationend', onCoinFlipAnimationEnd);
@@ -239,7 +228,7 @@
   }
 
   onMount(async () => {
-    await WebSockets.init();
+    await WebSockets.init(deviceId, !!devMode);
     WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
     let cachedState = LocalStorage.get('start-match-state');
     player1 = cachedState?.player1 || player1;
@@ -270,7 +259,6 @@
 <div class="player-selection-area">
   <div class="team-select-block">
     <PlayerSelectBlock
-      {doubles}
       isPartner={false}
       player={player1}
       num={1}
@@ -279,7 +267,6 @@
     />
     {#if doubles}
       <PlayerSelectBlock
-        doubles={true}
         isPartner={true}
         player={partner1}
         num={3}
@@ -293,7 +280,6 @@
   </div>
   <div class="team-select-block">
     <PlayerSelectBlock
-      {doubles}
       isPartner={false}
       player={player2}
       num={2}
@@ -302,7 +288,6 @@
     />
     {#if doubles}
       <PlayerSelectBlock
-        doubles={true}
         isPartner={true}
         player={partner2}
         num={4}

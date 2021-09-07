@@ -2,8 +2,9 @@
 /// <reference types="@sveltejs/kit" />
 
 type Device = {
+  id: number;
   type: string;
-  id: string;
+  name: string;
 };
 
 type Player = {
@@ -18,8 +19,8 @@ type Game = {
   score1: number;
   score2: number;
   matchId: number;
-  matchFinished: boolean;
-  gameFinished: boolean;
+  matchFinished: number; // Really a boolean but a 1 or 0 on the back-end
+  gameFinished: number; // Really a boolean but a 1 or 0 on the back-end
 };
 
 type Match = {
@@ -34,7 +35,7 @@ type Match = {
   player2Id: number;
   partner1Id: number;
   partner2Id: number;
-  finished: boolean;
+  finished: number; // Really a boolean but a 1 or 0 on the back-end
   startTime: string;
   finishTime: string;
   player1: Player;
@@ -56,6 +57,41 @@ type MatchStats = {
   winner: number;
 };
 
+type PlayerHeadToHeadStats = {
+  avgMargin: number;
+  avgPointsAgainst: number;
+  avgPointsFor: number;
+  gamesLost: number;
+  gamesWon: number;
+  matchesDrawn: number;
+  matchesLost: number;
+  matchesWon: number;
+  perGame: HeadToHeadStatsByGame[];
+  player: Player;
+  pointsAgainst: number;
+  pointsFor: number;
+};
+
+type HeadToHeadStatsByGame = {
+  avgMargin: number;
+  avgPointsAgainst: number;
+  avgPointsFor: number;
+  gameNum: number;
+  games: number;
+  pointsAgainst: number;
+  pointsFor: number;
+  player1?: string;
+  player2?: string;
+  [player1]?: number;
+  [player2]?: number;
+};
+
+type HeadToHeadStats = {
+  player1: PlayerHeadToHeadStats;
+  player2: PlayerHeadToHeadStats;
+  matches: Match[];
+};
+
 type Alert = {
   id?: string;
   type: string;
@@ -72,6 +108,11 @@ type ScoreUpdate = {
 
 type GameFinishUpdate = {
   game: Game;
+};
+
+type DevicesAddedUpdate = {
+  match: Match;
+  deviceIds: number[];
 };
 
 type LVP = {

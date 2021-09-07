@@ -66,7 +66,7 @@ const fireCallbacks = ({ type, data, originDeviceId }) => {
 };
 
 const WebSockets = {
-  init: (devId: number, useDevMode: boolean) => {
+  init: (devId: number, useDevMode?: boolean) => {
     return new Promise<void>((resolve, reject) => {
       if (initialized) {
         resolve();
@@ -85,7 +85,10 @@ const WebSockets = {
   },
 
   subscribe: (type, cb) => {
-    console.debug(`Subscribing to: ${type}`);
+    if (devMode) {
+      console.debug(`Subscribing to: ${type}`);
+    }
+
     if (callbacks[type]) {
       callbacks[type].push(cb);
     } else {
@@ -95,7 +98,9 @@ const WebSockets = {
 
   unsubscribe: (type, cb) => {
     if (callbacks[type]) {
-      console.debug(`Unsubscribing to: ${type}`);
+      if (devMode) {
+        console.debug(`Unsubscribing to: ${type}`);
+      }
       const i = callbacks[type].findIndex(fn => fn === cb);
       if (i !== -1) {
         callbacks[type].splice(i, 1);

@@ -1,11 +1,11 @@
 <!-- svelte-ignore a11y-label-has-associated-control -->
-<script context="module">
+<script context="module" lang="ts">
   import { BASE_URL } from '../modules/constants';
   export async function load({ fetch }) {
     const res = await fetch(`${BASE_URL}players`);
-    const players = await res.json();
+    const players: Player[] = await res.json();
     const playerOptions =
-      players?.map((p) => ({
+      players?.map(p => ({
         label: `${p.fname} ${p.lname}`,
         value: p.id,
         disabled: false
@@ -18,7 +18,7 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   import format from 'date-fns/format/index.js';
   import isAfter from 'date-fns/isAfter/index.js';
   import Chart from 'svelte-frappe-charts';
@@ -52,13 +52,17 @@
   import { onMount, onDestroy } from 'svelte';
   import { addAlert } from '../modules/stores';
   import { goto } from '$app/navigation';
-  export let playerOptions;
+  export let playerOptions: {
+    label: string;
+    value: string;
+    disabled: boolean;
+  }[] = [];
 
   const dateFormat = 'yyyy-MM-dd';
-  let resultHR;
+  let resultHR: HTMLElement;
 
-  let stats;
-  let perGameData;
+  let stats: HeadToHeadStats;
+  let perGameData: HeadToHeadStatsByGame[];
   let useDates = false;
   let startDate = format(new Date(), dateFormat);
   let endDate = format(new Date(), dateFormat);
@@ -66,8 +70,10 @@
   let player1 = playerOptions?.length > 0 ? playerOptions[0] : null;
   let player2 = playerOptions?.length > 1 ? playerOptions[1] : null;
 
-  let device = LocalStorage.get('device');
+  let devMode: boolean = LocalStorage.get('dev-mode');
+  let device: Device = LocalStorage.get('device');
   let deviceType = device?.type ? device.type : getBestGuessDevice();
+  let deviceId = device?.id;
   let clickOrTap = CLICK;
 
   if (
@@ -112,13 +118,14 @@
   async function submit(e) {
     if (player1 && player2) {
       let dateQuery = '';
+      //@ts-expect-error
       if (useDates && startDate && (!endDate || !isAfter(startDate, endDate))) {
         dateQuery = `?from=${startDate}${endDate ? '&to=' + endDate : ''}`;
       }
       stats = await Rest.get(
         `stats/head-to-head/${player1.value}/${player2.value}${dateQuery}`
       );
-      perGameData = stats.player1.perGame.map((pg) => {
+      perGameData = stats.player1.perGame.map(pg => {
         pg.player1 = stats.player1.player.fname;
         pg.player2 = stats.player2.player.fname;
         pg[stats.player1.player.fname] = pg.avgPointsFor;
@@ -126,6 +133,7 @@
         return pg;
       });
 
+      //@ts-expect-error
       window.smoothScroll(resultHR, 250);
     }
   }
@@ -141,7 +149,7 @@
   }
 
   onMount(async () => {
-    await WebSockets.init();
+    await WebSockets.init(deviceId, !!devMode);
     WebSockets.subscribe(MATCH_STARTED, onMatchStartedElsewhere);
   });
 
@@ -275,11 +283,11 @@
               datasets: [
                 {
                   name: perGameData[0].player1,
-                  values: perGameData.map((pg) => pg.avgPointsFor)
+                  values: perGameData.map(pg => pg.avgPointsFor)
                 },
                 {
                   name: perGameData[0].player2,
-                  values: perGameData.map((pg) => pg.avgPointsAgainst)
+                  values: perGameData.map(pg => pg.avgPointsAgainst)
                 }
               ]
             }}

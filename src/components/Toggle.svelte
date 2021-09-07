@@ -3,8 +3,8 @@
 
   export let altColor = '';
   export let onOff = false;
-  export let toggled: (property: string) => void;
-  export let property = '';
+  export let toggled: (property: number | string) => void;
+  export let property: number | string = '';
   export let id = '';
   export let style = '';
 </script>
