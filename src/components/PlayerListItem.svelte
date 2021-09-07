@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
   import Avatar from './Avatar.svelte';
-  export let item;
+  export let item: Player;
 </script>
 
 <div class="flex-center">

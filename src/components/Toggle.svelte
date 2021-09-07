@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
   import { TOGGLE } from '../modules/constants';
 
   export let altColor = '';
   export let onOff = false;
-  export let toggled = null;
+  export let toggled: (property: string) => void;
   export let property = '';
   export let id = '';
   export let style = '';
@@ -14,7 +14,7 @@
     {id}
     type="checkbox"
     checked={onOff}
-    on:change={(e) => toggled(property)}
+    on:change={e => toggled && toggled(property)}
   />
   <label for={id}>{TOGGLE}</label>
 </div>

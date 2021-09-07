@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
   import DeviceIcon from './DeviceIcon.svelte';
-  export let item;
+  export let item: { type: string; name: string };
 </script>
 
 <div class="flex-center">

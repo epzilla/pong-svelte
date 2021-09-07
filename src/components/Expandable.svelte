@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let defaultCollapsed = true;
   export let forceCollapsed = false;
   export let centered = false;

@@ -1,11 +1,11 @@
-<script>
-  export let onClick;
-  export let btnPos;
-  let dir = btnPos === 'top' ? 'up' : 'down';
-  let btnClasses = `btn btn-invert stepper-btn ${
+<script lang="ts">
+  export let onClick: (e: MouseEvent) => void;
+  export let btnPos: 'top' | 'bottom' = 'top';
+  $: dir = btnPos === 'top' ? 'up' : 'down';
+  $: btnClasses = `btn btn-invert stepper-btn ${
     btnPos === 'top' ? 'top-btn' : 'bottom-btn'
   }`;
-  let iClass = `fa fa-angle-${btnPos === 'top' ? 'up' : 'down'}`;
+  $: iClass = `fa fa-angle-${btnPos === 'top' ? 'up' : 'down'}`;
 </script>
 
 <button class={btnClasses} data-direction={dir} on:click={onClick}>

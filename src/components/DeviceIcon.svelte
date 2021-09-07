@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
   import { DEVICE_TYPES } from '../modules/constants';
-  export let type;
-  let icon;
+  export let type: string;
+  let icon: string = 'cube';
 
   switch (type) {
     case DEVICE_TYPES.MOBILE_DEVICE:

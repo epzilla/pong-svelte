@@ -34,4 +34,4 @@ export const dismissAlert = (id: string) => {
   alerts.update(n => n.filter(al => al.id !== id));
 };
 
-export const currentMatch = writable({});
+export const currentMatch = writable<Match>(null);

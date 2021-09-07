@@ -1,4 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /// <reference types="@sveltejs/kit" />
+
+type Device = {
+  type: string;
+  id: string;
+};
 
 type Player = {
   id: string;
@@ -51,10 +57,24 @@ type MatchStats = {
 };
 
 type Alert = {
-  id: string;
+  id?: string;
   type: string;
   msg: string;
   action?: () => void;
   clickable?: boolean;
   timeout?: number;
+};
+
+type ScoreUpdate = {
+  game: Game;
+  scorer: Player;
+};
+
+type GameFinishUpdate = {
+  game: Game;
+};
+
+type LVP = {
+  label: string;
+  value: any;
 };

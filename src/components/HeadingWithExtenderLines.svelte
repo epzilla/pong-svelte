@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
   export let text = '';
   export let color = '#ccc';
-  export let style = {};
+  export let style = '';
   /**
    * Where to place the text. If not provided, defaults to "start", placing the text
    * on the left for an LTR layout, with line extending all the way to the right.
@@ -9,18 +9,18 @@
    * For "end", in a LTR layout, the text will be on the right with a line extending
    * all the wayt to the left.
    */
-  export let align = 'start'; // 'start' | 'center' | 'end';
+  export let align: 'start' | 'center' | 'end' = 'start';
 
   // h4 element rendered
   let el;
 
-  function getStyles(color, style) {
-    let styles = {};
+  function getStyles(color: string, style: string) {
+    let styles = '';
     if (style) {
       styles = style;
     }
     if (color) {
-      styles.color = color;
+      styles += ` color: ${color}`;
       el?.style.setProperty('--heading-with-extender-color', color);
     }
     return styles;

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import LocalStorage from '../modules/localStorage';
   import DeviceListItem from './DeviceListItem.svelte';
   import Modal from './Modal.svelte';
@@ -10,18 +10,18 @@
     SELECT_DEVICES_HEADER,
     SHARE
   } from '../modules/constants';
-  export let devices = [];
+  export let devices: Device[] = [];
   export let onSelect;
   export let dismiss;
   export let show;
 
-  let device = LocalStorage.get('device');
+  let device: Device = LocalStorage.get('device');
   let deviceId = device?.id;
-  let selectedDevices = [];
+  let selectedDevices: Device[] = [];
 
-  $: filteredDevices = devices?.filter((d) => d.id !== deviceId);
+  $: filteredDevices = devices?.filter(d => d.id !== deviceId);
 
-  function toggleItemSelected(d) {
+  function toggleItemSelected(d: Device) {
     let allSelected = [...selectedDevices];
     const i = allSelected.indexOf(d);
     if (i === -1) {

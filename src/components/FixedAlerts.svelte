@@ -1,12 +1,11 @@
-<script>
+<script lang="ts">
   import { alerts } from '../modules/stores';
   import Alert from './Alert.svelte';
-  export let device = '';
 </script>
 
 <div class="fixed-alerts">
   {#each $alerts as al}
-    <Alert alert={al} {device} />
+    <Alert alert={al} />
   {/each}
 </div>
 

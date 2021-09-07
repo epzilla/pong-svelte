@@ -1,21 +1,21 @@
-<script>
+<script lang="ts">
   import { getStores } from '$app/stores';
   import { currentMatch } from '../modules/stores';
   import { MENU, ROUTES, SITE_TITLE } from '../modules/constants';
   import { isEmpty } from '../modules/helpers';
   const { page } = getStores();
 
-  export let match = {};
+  export let match: Match = null;
 
   let view = '';
   let menu = false;
   $: backdropClass = `nav-modal-backdrop${menu ? ' show' : ''}`;
   $: shownRoutes = isEmpty(match)
-    ? ROUTES.filter((r) => !r.hideIfNoMatch)
-    : ROUTES.filter((r) => !r.hideIfMatchInProgress);
+    ? ROUTES.filter(r => !r.hideIfNoMatch)
+    : ROUTES.filter(r => !r.hideIfMatchInProgress);
 
   page.subscribe(({ path }) => (view = path));
-  currentMatch.subscribe((m) => (match = m));
+  currentMatch.subscribe(m => (match = m));
 
   function toggleMenu() {
     menu = !menu;

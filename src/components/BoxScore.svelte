@@ -14,13 +14,15 @@
     calculateExpectedPointsPerMatch,
     shouldFlashScore
   } from '../modules/helpers';
+
   export let match: Match;
+  export let jumbotron: boolean;
+
   let stats: MatchStats;
   let headerRowNums: number[] = [];
   let matchFlash: boolean;
   let gameFlash: boolean;
   let scoreFlash: boolean;
-  let jumbotron: boolean;
   let numCols = 0;
   let currentGame: number;
   let classes = 'scoreboard ';

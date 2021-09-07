@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
   import { SELECT_PLAYER_OR_PARTNER } from '../modules/constants';
   import Avatar from './Avatar.svelte';
-  export let player;
-  export let num;
-  export let selectCallback;
-  export let selectBtnText;
-  export let isPartner;
+  export let player: Player;
+  export let num: number;
+  export let selectCallback: (n: number) => void;
+  export let selectBtnText = 'Select';
+  export let isPartner = false;
 </script>
 
 <div

@@ -1,8 +1,8 @@
-<script>
-  export let className;
-  export let items;
-  export let selectedItems;
-  export let onSelect;
+<script lang="ts">
+  export let className: string = '';
+  export let items: any[] = [];
+  export let selectedItems: any[] = [];
+  export let onSelect: (item: any) => void;
   export let component;
 </script>
 

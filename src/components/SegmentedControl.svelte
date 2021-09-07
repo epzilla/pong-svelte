@@ -1,7 +1,7 @@
-<script>
-  export let options;
-  export let onChange;
-  export let value;
+<script lang="ts">
+  export let options: LVP[] = [];
+  export let onChange: (val: any) => void;
+  export let value = null;
 
   function onKeyup(e) {
     if (
@@ -26,7 +26,7 @@
       class:selected={opt.value === value}
       class="btn"
       data-value={opt.value}
-      on:click={(e) => handleClick(opt.value)}>{opt.label}</button
+      on:click={e => handleClick(opt.value)}>{opt.label}</button
     >
   {/each}
 </div>

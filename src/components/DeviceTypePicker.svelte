@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
   import { DEVICE_TYPES } from '../modules/constants';
   import DeviceIcon from './DeviceIcon.svelte';
-  export let callback;
-  export let selectedType;
+  export let callback: (type: string) => void;
+  export let selectedType: string;
 
   function keyup(code, type) {
     if (code === 'Enter' || code === 'Space') {
@@ -14,7 +14,7 @@
 <div class="device-type-picker">
   {#each Object.keys(DEVICE_TYPES) as type, index}
     <button
-      on:keyup={(e) => keyup(e.code, type)}
+      on:keyup={e => keyup(e.code, type)}
       tabindex={index + 3}
       class={`device-type-option ${
         DEVICE_TYPES[type] === selectedType ? 'selected' : ''

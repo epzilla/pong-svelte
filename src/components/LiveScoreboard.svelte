@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onDestroy, onMount } from 'svelte';
   import WebSockets from '../modules/websockets';
   import {
@@ -9,33 +9,33 @@
   } from '../modules/constants';
   import BoxScore from './BoxScore.svelte';
 
-  export let match;
+  export let match: Match;
 
-  const onScoreUpdate = ({ game, scorer }) => {
-    let i = match?.games.findIndex((g) => g.id === game.id);
+  const onScoreUpdate = ({ game, scorer }: ScoreUpdate) => {
+    let i = match?.games.findIndex(g => g.id === game.id);
     if (i !== -1) {
       match.games[i] = game;
       match = match;
     }
   };
 
-  const onGameStart = (game) => {
-    let i = match?.games.findIndex((g) => g.id === game.id);
+  const onGameStart = (game: Game) => {
+    let i = match?.games.findIndex(g => g.id === game.id);
     if (i === -1) {
       match.games.push(game);
       match = match;
     }
   };
 
-  const onGameFinish = ({ game }) => {
-    let i = match?.games.findIndex((g) => g.id === game.id);
+  const onGameFinish = ({ game }: GameFinishUpdate) => {
+    let i = match?.games.findIndex(g => g.id === game.id);
     if (i !== -1) {
       match.games[i] = game;
       match = match;
     }
   };
 
-  const onMatchFinish = (finishedMatch) => {
+  const onMatchFinish = (finishedMatch: Match) => {
     match = finishedMatch;
   };
 

@@ -1,28 +1,29 @@
-<script>
+<script lang="ts">
   import StepperBtn from './StepperBtn.svelte';
   export let initialValue = 0;
   export const full = true;
   export let padSingleDigits = false;
-  export let onChange = null;
+  export let onChange: ({ full: boolean, amount: number }) => void = null;
   export let min = null;
   export let max = null;
   export let wrap = false;
 
-  $: val = initialValue || 0;
+  $: val = (initialValue || 0).toString();
   let classes = `stepper stepper-full`;
 
   $: {
-    val = initialValue || 0;
-    if (padSingleDigits && Math.abs(val) < 10) {
-      if (val >= 0) {
+    val = (initialValue || 0).toString();
+    let intVal = parseInt(val);
+    if (padSingleDigits && Math.abs(intVal) < 10) {
+      if (intVal >= 0) {
         val = '0' + val;
       } else {
-        val = '-0' + Math.abs(val);
+        val = '-0' + Math.abs(intVal);
       }
     }
   }
 
-  function stepDown(e) {
+  function stepDown(e: MouseEvent) {
     e.preventDefault();
     let curVal = parseInt(val);
     if (typeof min !== 'undefined' && curVal === min) {
@@ -52,7 +53,7 @@
       });
   }
 
-  function stepUp(e) {
+  function stepUp(e: MouseEvent) {
     e.preventDefault();
     let curVal = parseInt(val);
     if (typeof max !== 'undefined' && curVal === max) {
