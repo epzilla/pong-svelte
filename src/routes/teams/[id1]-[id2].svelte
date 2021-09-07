@@ -1,17 +1,17 @@
-<script context="module">
+<script context="module" lang="ts">
   import { BASE_URL } from '../../modules/constants';
 
   export async function load({ fetch, page }) {
     try {
-      const p1 = await page.params.id1;
-      const p2 = await page.params.id2;
+      const p1: string = await page.params.id1;
+      const p2: string = await page.params.id2;
       const [playersResult, statsResult] = await Promise.all([
         fetch(`${BASE_URL}players`),
         fetch(`${BASE_URL}stats/by-team/${p1}-${p2}`)
       ]);
-      const players = await playersResult.json();
-      const stats = await statsResult.json();
-      const team = players.filter((p) => {
+      const players: Player[] = await playersResult.json();
+      const stats: Match[] = await statsResult.json();
+      const team = players.filter(p => {
         const pid = p.id.toString();
         return pid === p1 || pid === p2;
       });
@@ -31,11 +31,10 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   import BoxScore from '../../components/BoxScore.svelte';
-  export let players;
-  export let team;
-  export let stats;
+  export let team: Player[] = [];
+  export let stats: Match[] = [];
 </script>
 
 {#if team?.length > 1}

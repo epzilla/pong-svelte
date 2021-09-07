@@ -1,11 +1,11 @@
-<script context="module">
+<script context="module" lang="ts">
   import { BASE_URL } from '../../modules/constants';
 
   export async function load({ fetch, page }) {
     try {
-      const id = await page.params.id;
+      const id: string = await page.params.id;
       const matchResult = await fetch(`${BASE_URL}matches/${id}`);
-      const match = await matchResult.json();
+      const match: Match = await matchResult.json();
       return {
         props: {
           match
@@ -20,10 +20,10 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   import { MATCH_SUMMARY } from '../../modules/constants';
   import BoxScore from '../../components/BoxScore.svelte';
-  export let match;
+  export let match: Match;
 </script>
 
 <div class="main match-summary">
